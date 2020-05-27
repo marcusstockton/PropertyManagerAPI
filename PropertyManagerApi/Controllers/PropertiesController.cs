@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PropertyManagerApi.Data;
@@ -10,23 +10,26 @@ using PropertyManagerApi.Models;
 
 namespace PropertyManagerApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/{portfolioId}")]
     [ApiController]
     public class PropertiesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public PropertiesController(ApplicationDbContext context)
+        public PropertiesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Properties
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Property>>> GetProperties()
-        {
-            return await _context.Properties.ToListAsync();
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<Property>>> GetProperties()
+        //{
+        //    return await _context.Properties.ToListAsync();
+        //}
 
         // GET: api/Properties/5
         [HttpGet("{id}")]

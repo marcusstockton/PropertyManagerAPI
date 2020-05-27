@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PropertyManagerApi.Data;
@@ -10,15 +11,17 @@ using PropertyManagerApi.Models;
 
 namespace PropertyManagerApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AddressesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
-        public AddressesController(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public AddressesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Addresses
