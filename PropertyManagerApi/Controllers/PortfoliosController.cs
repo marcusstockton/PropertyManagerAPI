@@ -35,7 +35,7 @@ namespace PropertyManagerApi.Controllers
 
         // GET: api/Portfolios/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Portfolio>> GetPortfolio(Guid id)
+        public async Task<ActionResult<PortfolioDetail>> GetPortfolio(Guid id)
         {
             var portfolio = await _context.Portfolios.FindAsync(id);
 
@@ -43,20 +43,34 @@ namespace PropertyManagerApi.Controllers
             {
                 return NotFound();
             }
+            var portfolioDetail = _mapper.Map<PortfolioDetail>(portfolio);
+            return portfolioDetail;
+        }
 
-            return portfolio;
+        [HttpGet("GetPortfolioAndProperties/{id}")]
+        public async Task<ActionResult<PortfolioDetail>> GetPortfolioAndProperties(Guid id)
+        {
+            var portfolio = await _context.Portfolios.Include(x=>x.Properties).FirstOrDefaultAsync(x=>x.Id == id);
+
+            if (portfolio == null)
+            {
+                return NotFound();
+            }
+            var portfolioDetail = _mapper.Map<PortfolioDetail>(portfolio);
+            return portfolioDetail;
         }
 
         // PUT: api/Portfolios/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPortfolio(Guid id, Portfolio portfolio)
+        public async Task<IActionResult> PutPortfolio(Guid id, PortfolioDetail portfolioDetail)
         {
-            if (id != portfolio.Id)
+            if (id != portfolioDetail.Id)
             {
                 return BadRequest();
             }
+            var portfolio = _mapper.Map<Portfolio>(portfolioDetail);
 
             _context.Entry(portfolio).State = EntityState.Modified;
 
@@ -102,7 +116,7 @@ namespace PropertyManagerApi.Controllers
 
         // DELETE: api/Portfolios/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Portfolio>> DeletePortfolio(Guid id)
+        public async Task<ActionResult<PortfolioDetail>> DeletePortfolio(Guid id)
         {
             var portfolio = await _context.Portfolios.FindAsync(id);
             if (portfolio == null)
@@ -110,10 +124,13 @@ namespace PropertyManagerApi.Controllers
                 return NotFound();
             }
 
+            var portfolioDetail = _mapper.Map<PortfolioDetail>(portfolio);
+
             _context.Portfolios.Remove(portfolio);
+
             await _context.SaveChangesAsync();
 
-            return portfolio;
+            return portfolioDetail;
         }
 
         private bool PortfolioExists(Guid id)

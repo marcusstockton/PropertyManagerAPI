@@ -13,6 +13,7 @@ namespace PropertyManagerApi.Profiles
         public PortfolioProfile()
         {
             CreateMap<Portfolio, PortfolioCreate>().ReverseMap();
+            CreateMap<Portfolio, PortfolioDetail>().ReverseMap();
         }
     }
 }

@@ -15,6 +15,7 @@ namespace PropertyManagerApi.Profiles
         public UserProfile()
         {
             CreateMap<ApplicationUser, UserResponse>().ReverseMap();
+            CreateMap<ApplicationUser, UserDto>().ReverseMap();
         }
     }
 }
