@@ -86,7 +86,7 @@ namespace PropertyManagerApi.Controllers
             _context.Notes.Add(note);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetNote", new { id = note.Id }, note);
+            return CreatedAtAction(nameof(GetNote), new { id = note.Id }, note);
         }
 
         // DELETE: api/Notes/5

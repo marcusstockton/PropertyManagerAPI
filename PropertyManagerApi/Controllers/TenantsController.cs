@@ -87,7 +87,7 @@ namespace PropertyManagerApi.Controllers
             _context.Tenants.Add(tenant);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTenant", new { id = tenant.Id }, tenant);
+            return CreatedAtAction(nameof(GetTenant), new { id = tenant.Id }, tenant);
         }
 
         // DELETE: api/Tenants/5

@@ -116,7 +116,7 @@ namespace PropertyManagerApi.Controllers
             _context.Portfolios.Add(newPortfolio);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPortfolio", new { id = newPortfolio.Id }, newPortfolio);
+            return CreatedAtAction(nameof(GetPortfolio), new { id = newPortfolio.Id }, newPortfolio);
         }
 
         // DELETE: api/Portfolios/5

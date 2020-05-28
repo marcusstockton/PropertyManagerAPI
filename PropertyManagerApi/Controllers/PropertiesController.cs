@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -26,11 +27,19 @@ namespace PropertyManagerApi.Controllers
         }
 
         // GET: api/Properties
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Property>>> GetProperties()
-        //{
-        //    return await _context.Properties.ToListAsync();
-        //}
+        /// <summary>
+        /// Gets a list of properties against the given portfolio Id
+        /// </summary>
+        /// <param name="portfolioId">The Portfolio Id</param>
+        /// <returns></returns>
+        [HttpGet("{portfolioId}")]
+        public async Task<ActionResult<IEnumerable<PropertyDetail>>> GetProperties(Guid portfolioId)
+        {
+            var propertyList = await _context.Properties.Where(x=>x.Portfolio.Id == portfolioId).ToListAsync();
+
+            var result = _mapper.Map<IEnumerable<PropertyDetail>>(propertyList);
+            return Ok(result);
+        }
 
         // GET: api/Properties/5
         [HttpGet("{portfolioId}/{id}")]
@@ -94,9 +103,10 @@ namespace PropertyManagerApi.Controllers
 
             _context.Properties.Add(newProperty);
             _context.Addresses.Add(newProperty.Address);
+            
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProperty", new { id = newProperty.Id });
+            return CreatedAtAction(nameof(GetProperty), new { portfolioId, id = newProperty.Id });
         }
 
         // DELETE: api/Properties/5
