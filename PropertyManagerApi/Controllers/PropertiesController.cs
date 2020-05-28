@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Models;
+using PropertyManagerApi.Models.DTOs.Property;
 
 namespace PropertyManagerApi.Controllers
 {
     [Authorize]
-    [Route("api/[controller]/{portfolioId}")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PropertiesController : ControllerBase
     {
@@ -32,8 +33,8 @@ namespace PropertyManagerApi.Controllers
         //}
 
         // GET: api/Properties/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Property>> GetProperty(Guid id)
+        [HttpGet("{portfolioId}/{id}")]
+        public async Task<ActionResult<Property>> GetProperty(Guid portfolioId, Guid id)
         {
             var @property = await _context.Properties.FindAsync(id);
 
@@ -48,8 +49,8 @@ namespace PropertyManagerApi.Controllers
         // PUT: api/Properties/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProperty(Guid id, Property @property)
+        [HttpPut("{portfolioId}/{id}")]
+        public async Task<IActionResult> PutProperty(Guid portfolioId, Guid id, Property @property)
         {
             if (id != @property.Id)
             {
@@ -80,18 +81,27 @@ namespace PropertyManagerApi.Controllers
         // POST: api/Properties
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Property>> PostProperty(Property @property)
+        [HttpPost("{portfolioId}")]
+        public async Task<ActionResult<Property>> PostProperty(Guid portfolioId, PropertyCreate @property)
         {
-            _context.Properties.Add(@property);
+            var portfolio = await _context.Portfolios.FindAsync(portfolioId);
+            if (portfolio == null)
+            {
+                return BadRequest("Portfolio not found");
+            }
+            var newProperty = _mapper.Map<Property>(@property);
+            newProperty.Portfolio = portfolio;
+
+            _context.Properties.Add(newProperty);
+            _context.Addresses.Add(newProperty.Address);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProperty", new { id = @property.Id }, @property);
+            return CreatedAtAction("GetProperty", new { id = newProperty.Id });
         }
 
         // DELETE: api/Properties/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Property>> DeleteProperty(Guid id)
+        [HttpDelete("{portfolioId}/{id}")]
+        public async Task<ActionResult<Property>> DeleteProperty(Guid portfolioId, Guid id)
         {
             var @property = await _context.Properties.FindAsync(id);
             if (@property == null)

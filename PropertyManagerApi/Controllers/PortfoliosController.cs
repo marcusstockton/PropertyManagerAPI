@@ -50,7 +50,12 @@ namespace PropertyManagerApi.Controllers
         [HttpGet("GetPortfolioAndProperties/{id}")]
         public async Task<ActionResult<PortfolioDetail>> GetPortfolioAndProperties(Guid id)
         {
-            var portfolio = await _context.Portfolios.Include(x=>x.Properties).FirstOrDefaultAsync(x=>x.Id == id);
+            var portfolio = await _context.Portfolios
+                .Include(x=>x.Properties)
+                    .ThenInclude(x=>x.Address)
+                .Include(x=>x.Properties)
+                    .ThenInclude(x=>x.Tenants)
+                .FirstOrDefaultAsync(x=>x.Id == id);
 
             if (portfolio == null)
             {

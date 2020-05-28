@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Models;
 
-namespace PropertyManagerApi.Controllers
+namespace PropertyManagerApi.Controllers // NOT SURE I NEED THIS CONTROLLER AS ADDRESS WILL BE ON THE PROPERTY...
 {
     [Authorize]
     [Route("api/[controller]")]

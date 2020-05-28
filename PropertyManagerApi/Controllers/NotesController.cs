@@ -14,7 +14,7 @@ namespace PropertyManagerApi.Controllers
     [Authorize]
     [Route("api/[controller]/{tenantId}")]
     [ApiController]
-    public class NotesController : ControllerBase
+    public class NotesController : ControllerBase // NOT SURE I NEED THIS CONTROLLER AS NOTES WILL BE ON THE TENANT...
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;

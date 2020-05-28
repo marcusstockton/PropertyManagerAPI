@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200528123852_AddingPortfolioToProperty.cs" />
+    <Compile Remove="Migrations\20200528123852_AddingPortfolioToProperty.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
@@ -34,6 +39,10 @@
   <ItemGroup>
     <Folder Include="Models\DTOs\Address\" />
     <Folder Include="Models\DTOs\Tenant\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
 </Project>

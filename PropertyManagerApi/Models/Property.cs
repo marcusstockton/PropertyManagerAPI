@@ -49,5 +49,10 @@ namespace PropertyManagerApi.Models
         /// List of tenants at the property
         /// </summary>
         public List<Tenant> Tenants { get; set; }
+
+        /// <summary>
+        /// Link back to the portfolio
+        /// </summary>
+        public virtual Portfolio Portfolio { get; set; }
     }
 }
