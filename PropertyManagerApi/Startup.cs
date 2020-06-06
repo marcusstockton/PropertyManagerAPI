@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Helpers;
+using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Services;
 using System;
@@ -126,8 +127,13 @@ namespace PropertyManagerApi
                     ValidateAudience = false
                 };
             });
-            services.AddTransient<DataSeeder>();
+
+            services.AddTransient<IPortfolioServce, PortfolioService>();
+            services.AddTransient<IPropertyService, PropertyService>();
             services.AddScoped<IUserService, UserService>();
+
+
+            services.AddTransient<DataSeeder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

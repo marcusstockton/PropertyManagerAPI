@@ -4,10 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PropertyManagerApi.Data;
+using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Portfolio;
 
@@ -17,12 +16,12 @@ namespace PropertyManagerApi.Controllers
     [ApiController]
     public class PortfoliosController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IPortfolioServce _portfolioService;
         private readonly IMapper _mapper;
 
-        public PortfoliosController(ApplicationDbContext context, IMapper mapper)
+        public PortfoliosController(IPortfolioServce portfolioServce, IMapper mapper)
         {
-            _context = context;
+            _portfolioService = portfolioServce;
             _mapper = mapper;
         }
 
@@ -30,14 +29,16 @@ namespace PropertyManagerApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Portfolio>>> GetPortfolios()
         {
-            return await _context.Portfolios.ToListAsync();
+            var userid = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+            return Ok(await _portfolioService.GetPortfolios(userid));
         }
 
         // GET: api/Portfolios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PortfolioDetail>> GetPortfolio(Guid id)
         {
-            var portfolio = await _context.Portfolios.FindAsync(id);
+            var portfolio = await _portfolioService.GetPortfolioById(id);
 
             if (portfolio == null)
             {
@@ -50,12 +51,7 @@ namespace PropertyManagerApi.Controllers
         [HttpGet("GetPortfolioAndProperties/{id}")]
         public async Task<ActionResult<PortfolioDetail>> GetPortfolioAndProperties(Guid id)
         {
-            var portfolio = await _context.Portfolios
-                .Include(x=>x.Properties)
-                    .ThenInclude(x=>x.Address)
-                .Include(x=>x.Properties)
-                    .ThenInclude(x=>x.Tenants)
-                .FirstOrDefaultAsync(x=>x.Id == id);
+            var portfolio = await _portfolioService.GetPortfolioAndProperties(id);
 
             if (portfolio == null)
             {
@@ -77,23 +73,7 @@ namespace PropertyManagerApi.Controllers
             }
             var portfolio = _mapper.Map<Portfolio>(portfolioDetail);
 
-            _context.Entry(portfolio).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PortfolioExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _portfolioService.UpdatePortfolio(portfolio);
 
             return NoContent();
         }
@@ -111,36 +91,19 @@ namespace PropertyManagerApi.Controllers
             {
                 return Unauthorized();
             }
-            var loggedInUser = await _context.Users.FindAsync(userId);
-            newPortfolio.Owner = loggedInUser;
-            _context.Portfolios.Add(newPortfolio);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPortfolio), new { id = newPortfolio.Id }, newPortfolio);
+            var createdPortfolio = await _portfolioService.CreatePortfolio(newPortfolio, userId);
+
+            return CreatedAtAction(nameof(GetPortfolio), new { id = createdPortfolio.Id }, createdPortfolio);
         }
 
         // DELETE: api/Portfolios/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<PortfolioDetail>> DeletePortfolio(Guid id)
+        public async Task<ActionResult> DeletePortfolio(Guid id)
         {
-            var portfolio = await _context.Portfolios.FindAsync(id);
-            if (portfolio == null)
-            {
-                return NotFound();
-            }
-
-            var portfolioDetail = _mapper.Map<PortfolioDetail>(portfolio);
-
-            _context.Portfolios.Remove(portfolio);
-
-            await _context.SaveChangesAsync();
-
-            return portfolioDetail;
-        }
-
-        private bool PortfolioExists(Guid id)
-        {
-            return _context.Portfolios.Any(e => e.Id == id);
+            await _portfolioService.DeletePortfolio(id);
+            
+            return NoContent();
         }
     }
 }
