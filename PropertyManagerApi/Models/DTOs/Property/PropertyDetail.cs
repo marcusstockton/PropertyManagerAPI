@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PropertyManagerApi.Models.DTOs.Tenant;
+using System;
 using System.Collections.Generic;
 
 namespace PropertyManagerApi.Models.DTOs.Property
@@ -15,6 +16,6 @@ namespace PropertyManagerApi.Models.DTOs.Property
         public string Description { get; set; }
         public int NoOfBeds { get; set; }
         public double RentalPrice { get; set; }
-        public List<Tenant> Tenants { get; set; }
+        public List<Tenant_Detail> Tenants { get; set; }
     }
 }

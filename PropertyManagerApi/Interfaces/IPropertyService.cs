@@ -10,8 +10,11 @@ namespace PropertyManagerApi.Interfaces
     {
         Task<IList<Property>> GetPropertiesForPortfolio(Guid portfolioId);
         Task<Property> GetPropertyById(Guid portfolioId, Guid propertyId);
-        Task<Property> CreateProperty(Property property);
-        Task<Property> UpdateProperty(Property property);
+        Task<Property> CreateProperty(Property property, Guid portfolioId);
+        Task<Property> UpdateProperty(Property property, Guid portfolioId);
         Task<bool> DeleteProperty(Guid propertyId);
+        Task<Property> GetPropertyDetails(Guid propertyId);
+        Task<Property> AddAddressToProperty(Guid propertyId, Address address);
+        Task<Property> AddTenantsToProperty(Guid propertyId, List<Tenant> tenants);
     }
 }

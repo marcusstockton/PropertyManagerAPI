@@ -48,7 +48,7 @@ namespace PropertyManagerApi.Data
                 {
                     await _userManager.AddToRoleAsync(validUser, "Admin");
                 }
-                
+
                 var basicUser = new ApplicationUser()
                 {
                     Email = "beckystockton84@hotmail.co.uk",
@@ -66,7 +66,66 @@ namespace PropertyManagerApi.Data
 
                 _context.SaveChanges();
             }
+            if (!_context.Portfolios.Any())
+            {
+                // Create some portfolio's
+                var p1 = new Portfolio
+                {
+                    Name = "Exeter 1",
+                    Owner = _context.Users.First(x => x.Email == "beckystockton84@hotmail.co.uk"),
+                    Properties = new System.Collections.Generic.List<Property>{
+                        new Property{
+                            Address = new Address{
+                                City = "Exeter",
+                                Line1 = "18B",
+                                Line2 = "Whipton Close",
+                                PostCode = "EX1 1EX",
+                            },
+                            Description = "A stunning one bedroom flat, decorated to a high standard for the area",
+                            NoOfBeds = 1,
+                            PropertyValue = 120987,
+                            PurchaseDate = new DateTime(2001, 5, 12),
+                            RentalPrice = 675,
+                            Tenants = new System.Collections.Generic.List<Tenant>{
+                                new Tenant{
+                                    ContactNumber = "07836759231",
+                                    EmailAddress = "testTenant@demo.com",
+                                    FirstName = "Mallory",
+                                    LastName = "Averland",
+                                    Profession = "Bottle Doctor",
+                                    TenancyStartDate = new DateTime(2019, 02, 16),
+                                    Title = "Mr",
+                                    Notes = new System.Collections.Generic.List<Note>{
+                                        new Note{
+                                            Title = "First Impressions",
+                                            Description = "A lovely tenant, friendly and chatty, and looks like they will keep the property in good condition"
+                                        },
+                                    },
+                                },
+                                new Tenant{
+                                    ContactNumber = "0784572834",
+                                    EmailAddress = "old_tenant@test.com",
+                                    FirstName = "Sioux",
+                                    LastName = "Lamprey",
+                                    Profession = "Cleaner",
+                                    Title  = "Miss",
+                                    TenancyStartDate = new DateTime(2018, 01, 12),
+                                    TenancyEndDate = new DateTime(2019, 01, 30),
+                                    Notes = new System.Collections.Generic.List<Note>{
+                                        new Note{
+                                            Title = "My first note",
+                                            Description = "Looks shady, but promises to keep the property in 'good nick'"
+                                        },
 
+                                    },
+                                }
+                            }
+                        }
+                    }
+                };
+                await _context.Portfolios.AddAsync(p1);
+                await _context.SaveChangesAsync();
+            }
         }
-        }
+    }
 }

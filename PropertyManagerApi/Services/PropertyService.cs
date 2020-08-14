@@ -19,24 +19,73 @@ namespace PropertyManagerApi.Services
 
         public async Task<IList<Property>> GetPropertiesForPortfolio(Guid portfolioId)
         {
-            return await _context.Properties.AsNoTracking().Where(x => x.Portfolio.Id == portfolioId).ToListAsync();
+            return await _context.Properties
+                .Include(x=>x.Address)
+                .Include(x=>x.Tenants)
+                .AsNoTracking()
+                .Where(x => x.Portfolio.Id == portfolioId && x.IsActive)
+                .ToListAsync();
         }
+
+        //public async Task<IList<Property>> GetPropertiesForUserId(Guid userId)
+        //{
+        //    return await _context.Properties.AsNoTracking().Where(x => x.Portfolio == portfolioId).ToListAsync();
+        //}
 
         public async Task<Property> GetPropertyById(Guid portfolioId, Guid propertyId)
         {
             return await _context.Properties.SingleOrDefaultAsync(x=>x.Id == propertyId && x.Portfolio.Id == portfolioId);
         }
 
-        public async Task<Property> CreateProperty(Property property)
+        public async Task<Property> GetPropertyDetails(Guid propertyId)
         {
-            await _context.Properties.AddAsync(property);
-            await _context.Addresses.AddAsync(property.Address);
+            return await _context.Properties
+                .Include(x=>x.Tenants)
+                .Include(x=>x.Address)
+                .SingleAsync(x=>x.Id == propertyId);
+        }
+
+        public async Task<Property> CreateProperty(Property property, Guid portfolioId)
+        {
+            var portfolio = await _context.Portfolios.FindAsync(portfolioId);
+            //property.Portfolio = portfolio;
+
+            portfolio.Properties.Add(property);
+
+            //await _context.Properties.AddAsync(property);
+            //await _context.Addresses.AddAsync(property.Address);
             await _context.SaveChangesAsync();
             
             return property;
         }
 
-        public async Task<Property> UpdateProperty(Property property)
+        public async Task<Property> AddAddressToProperty(Guid propertyId, Address address)
+        {
+            var property = await _context.Properties.FindAsync(propertyId);
+            if(property != null)
+            {
+                property.Address = address;
+                _context.Properties.Update(property);
+                await _context.SaveChangesAsync();
+                return property;
+            }
+            return null;
+        }
+
+        public async Task<Property> AddTenantsToProperty(Guid propertyId, List<Tenant> tenants)
+        {
+            var property = await _context.Properties.FindAsync(propertyId);
+            if(property != null)
+            {
+                property.Tenants.AddRange(tenants);
+                _context.Properties.Update(property);
+                await _context.SaveChangesAsync();
+                return property;
+            }
+            return null;
+        }
+
+        public async Task<Property> UpdateProperty(Property property, Guid portfolioId)
         {
             _context.Properties.Update(property);
             await _context.SaveChangesAsync();
@@ -53,5 +102,7 @@ namespace PropertyManagerApi.Services
             }
             return false;
         }
+
+
     }
 }

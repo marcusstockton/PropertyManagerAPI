@@ -49,6 +49,10 @@ namespace PropertyManagerApi.Models
         public string Profession { get; set; }
 
         /// <summary>
+        /// The URL for the tenants profile image
+        /// </summary>
+        public string Profile_Url { get; set; }
+        /// <summary>
         /// List of notes for the tenant
         /// </summary>
         public List<Note> Notes { get; set; }

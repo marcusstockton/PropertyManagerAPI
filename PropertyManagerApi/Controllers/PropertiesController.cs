@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -31,13 +32,20 @@ namespace PropertyManagerApi.Controllers
         /// <param name="portfolioId">The Portfolio Id</param>
         /// <returns></returns>
         [HttpGet("{portfolioId}")]
-        public async Task<ActionResult<IEnumerable<PropertyDetail>>> GetProperties(Guid portfolioId)
+        public async Task<ActionResult<IEnumerable<PropertyDetail>>> GetPropertiesByPortfolioId(Guid portfolioId)
         {
             var propertyList = await _propertyService.GetPropertiesForPortfolio(portfolioId);
 
             var result = _mapper.Map<IEnumerable<PropertyDetail>>(propertyList);
             return Ok(result);
         }
+
+        //public async Task<ActionResult<IEnumerable<PropertyDetail>>> GetPropertiesByLoggedInUser()
+        //{
+        //    // Need to add in a owner property to Property for this to work
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        //}
 
         // GET: api/Properties/5
         [HttpGet("{portfolioId}/{id}")]
@@ -53,11 +61,24 @@ namespace PropertyManagerApi.Controllers
             return @property;
         }
 
+        [HttpGet("GetPropertyDetails/{id}")]
+        public async Task<ActionResult<PropertyDetail>> GetPropertyDetails(Guid propertyId)
+        {
+            var @property = await _propertyService.GetPropertyDetails(propertyId);
+            if (@property == null)
+            {
+                return NotFound();
+            }
+            var result = _mapper.Map<PropertyDetail>(@property);
+            
+            return result;
+        }
+
         // PUT: api/Properties/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{portfolioId}/{id}")]
-        public async Task<IActionResult> PutProperty(Guid id, PropertyDetail propertyDetail)
+        public async Task<IActionResult> PutProperty(Guid portfolioId, Guid id, PropertyDetail propertyDetail)
         {
             if (id != propertyDetail.Id)
             {
@@ -65,7 +86,7 @@ namespace PropertyManagerApi.Controllers
             }
 
             var property = _mapper.Map<Property>(propertyDetail);
-            await _propertyService.UpdateProperty(property);
+            await _propertyService.UpdateProperty(property, portfolioId);
 
             return NoContent();
         }
@@ -77,10 +98,9 @@ namespace PropertyManagerApi.Controllers
         public async Task<ActionResult<Property>> PostProperty(Guid portfolioId, PropertyCreate @property)
         {
             var newProperty = _mapper.Map<Property>(@property);
-            newProperty.Portfolio.Id = portfolioId;
-            await _propertyService.CreateProperty(newProperty);
+            await _propertyService.CreateProperty(newProperty, portfolioId);
 
-            return CreatedAtAction(nameof(GetProperty), new { portfolioId, id = newProperty.Id });
+            return Ok(newProperty);
         }
 
         // DELETE: api/Properties/5

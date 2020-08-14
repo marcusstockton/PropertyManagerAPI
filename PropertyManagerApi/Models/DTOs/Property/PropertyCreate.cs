@@ -5,7 +5,7 @@ namespace PropertyManagerApi.Models.DTOs.Property
 {
     public class PropertyCreate
     {
-        [Required]
+        [Required, MaxLength(100)]
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string AddressLine3 { get; set; }

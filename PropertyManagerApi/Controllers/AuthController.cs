@@ -36,7 +36,7 @@ namespace PropertyManagerApi.Controllers
         ///
         ///     POST /authenticate
         ///     {
-        ///        "username": "testUser",
+        ///        "username": "beckystockton84@hotmail.co.uk",
         ///        "password": "Pa$$w0rd"
         ///     }
         ///
@@ -48,11 +48,11 @@ namespace PropertyManagerApi.Controllers
         public async Task<IActionResult> Authenticate([FromBody] LoginDto userParam)
         {
             var validUser = await _userService.ValidateUser(userParam);
-            _logger.LogInformation($"User Id {validUser.Id} found. Generating an auth token");
             if (validUser == null)
             {
                 return BadRequest();
             }
+            _logger.LogInformation($"User Id {validUser.Id} found. Generating an auth token");
             var user_token = _userService.Authenticate(validUser);
 
             var userResult = _mapper.Map<UserResponse>(user_token);

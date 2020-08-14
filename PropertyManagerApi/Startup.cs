@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PropertyManager.Api.Interfaces;
+using PropertyManager.Api.Services;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Helpers;
 using PropertyManagerApi.Interfaces;
@@ -37,10 +39,19 @@ namespace PropertyManagerApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            if(Environment.MachineName != "DEVELOPER-06")
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-
+            }
+            else
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlite(
+                    Configuration.GetConnectionString("DefaultSqliteConnection")));
+            }
+            
             services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -130,6 +141,8 @@ namespace PropertyManagerApi
 
             services.AddTransient<IPortfolioServce, PortfolioService>();
             services.AddTransient<IPropertyService, PropertyService>();
+            services.AddTransient<IFileService, FileService>();
+
             services.AddScoped<IUserService, UserService>();
 
 

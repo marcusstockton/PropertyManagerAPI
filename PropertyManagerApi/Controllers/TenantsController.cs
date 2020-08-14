@@ -6,8 +6,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PropertyManager.Api.Interfaces;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Models;
+using PropertyManagerApi.Models.DTOs.Tenant;
 
 namespace PropertyManagerApi.Controllers
 {
@@ -17,11 +19,13 @@ namespace PropertyManagerApi.Controllers
     public class TenantsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public TenantsController(ApplicationDbContext context, IMapper mapper)
+        public TenantsController(ApplicationDbContext context, IMapper mapper, IFileService fileService)
         {
             _context = context;
+            _fileService = fileService;
             _mapper = mapper;
         }
 
@@ -37,7 +41,7 @@ namespace PropertyManagerApi.Controllers
         public async Task<ActionResult<Tenant>> GetTenant(Guid id)
         {
             var tenant = await _context.Tenants.FindAsync(id);
-
+            
             if (tenant == null)
             {
                 return NotFound();
@@ -82,12 +86,20 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Tenant>> PostTenant(Tenant tenant)
+        public async Task<ActionResult<Tenant>> PostTenant([FromForm]Tenant_Create value)
         {
-            _context.Tenants.Add(tenant);
+            var newTenant = _mapper.Map<Tenant>(value);
+            _context.Tenants.Add(newTenant);
+
+            if (value.Profile != null)
+            {
+                // Save the file, return the file location
+                newTenant.Profile_Url = await _fileService.SaveFile(value.Profile, newTenant.Id);
+            }
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetTenant), new { id = tenant.Id }, tenant);
+            return Ok(newTenant);
         }
 
         // DELETE: api/Tenants/5
