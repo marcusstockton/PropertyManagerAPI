@@ -26,7 +26,7 @@ namespace PropertyManagerApi.Services
         Task<IdentityResult> RegisterUser(RegisterDto user);
         Task<ApplicationUser> ValidateUser(LoginDto userParam);
         Guid GetLoggedInUserId();
-        Task<ApplicationUser> GetUserById(string id);
+        Task<ApplicationUser> GetUserById(Guid id);
     }
 
 
@@ -144,7 +144,7 @@ namespace PropertyManagerApi.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<ApplicationUser> GetUserById(string id)
+        public async Task<ApplicationUser> GetUserById(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user != null)

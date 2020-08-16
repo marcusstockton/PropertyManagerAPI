@@ -42,7 +42,7 @@ namespace PropertyManager.Api.Services
             {
                 return string.Empty;
             }
-            Byte[] bytes = await File.ReadAllBytesAsync(Path.Combine(_env.WebRootPath, fileLocation));
+            var bytes = await File.ReadAllBytesAsync(Path.Combine(_env.ContentRootPath, fileLocation));
             return Convert.ToBase64String(bytes);
         }
 

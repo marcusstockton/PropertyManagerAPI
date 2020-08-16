@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,10 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Property;
+using PropertyManagerApi.Models.DTOs.Tenant;
 
 namespace PropertyManagerApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PropertiesController : ControllerBase
@@ -32,11 +34,11 @@ namespace PropertyManagerApi.Controllers
         /// <param name="portfolioId">The Portfolio Id</param>
         /// <returns></returns>
         [HttpGet("{portfolioId}")]
-        public async Task<ActionResult<IEnumerable<PropertyDetail>>> GetPropertiesByPortfolioId(Guid portfolioId)
+        public async Task<ActionResult<List<PropertyDetail>>> GetPropertiesByPortfolioId(Guid portfolioId)
         {
             var propertyList = await _propertyService.GetPropertiesForPortfolio(portfolioId);
 
-            var result = _mapper.Map<IEnumerable<PropertyDetail>>(propertyList);
+            var result = _mapper.Map<List<PropertyDetail>>(propertyList);
             return Ok(result);
         }
 

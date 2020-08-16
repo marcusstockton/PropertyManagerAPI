@@ -110,11 +110,15 @@ namespace PropertyManagerApi.Controllers
         /// </summary>
         /// <returns>ApplicationUser record</returns>
         [HttpGet("GetLoggedInUserDetails")]
-        public IActionResult GetLoggedInUserDetails()
+        public async Task<IActionResult> GetLoggedInUserDetails()
         {
             var user_id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = _userService.GetUserById(user_id);
-            return Ok(user);
+            if(Guid.TryParse(user_id, out Guid userId))
+            {
+                var user = await _userService.GetUserById(userId);
+                return Ok(_mapper.Map<UserDto>(user));
+            }
+            return NotFound();
         }
     }
 }
