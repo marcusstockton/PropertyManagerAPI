@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PropertyManagerApi.Models.DTOs.Portfolio
 {
-    public class PortfolioCreate
+    public class PortfolioCreateDto
     {
         public string Name { get; set; }
     }

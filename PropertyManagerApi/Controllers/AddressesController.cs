@@ -51,30 +51,34 @@ namespace PropertyManagerApi.Controllers // NOT SURE I NEED THIS CONTROLLER AS A
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAddress(Guid id, Address address)
         {
-            if (id != address.Id)
+            if (ModelState.IsValid)
             {
-                return BadRequest();
-            }
-
-            _context.Entry(address).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AddressExists(id))
+                if (id != address.Id)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return NoContent();
+                _context.Entry(address).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AddressExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return NoContent();
+            }
+            return BadRequest(ModelState);
         }
 
         // POST: api/Addresses
@@ -83,10 +87,14 @@ namespace PropertyManagerApi.Controllers // NOT SURE I NEED THIS CONTROLLER AS A
         [HttpPost]
         public async Task<ActionResult<Address>> PostAddress(Address address)
         {
-            _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
+            if (ModelState.IsValid)
+            {
+                _context.Addresses.Add(address);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAddress", new { id = address.Id }, address);
+                return CreatedAtAction("GetAddress", new { id = address.Id }, address);
+            }
+            return BadRequest(ModelState);
         }
 
         // DELETE: api/Addresses/5

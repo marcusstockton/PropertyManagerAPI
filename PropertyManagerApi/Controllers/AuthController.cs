@@ -55,7 +55,7 @@ namespace PropertyManagerApi.Controllers
             _logger.LogInformation($"User Id {validUser.Id} found. Generating an auth token");
             var user_token = _userService.Authenticate(validUser);
 
-            var userResult = _mapper.Map<UserResponse>(user_token);
+            var userResult = _mapper.Map<UserResponseDto>(user_token);
 
             _logger.LogInformation($"Token generated at {DateTime.Now}.");
             return Ok(userResult);

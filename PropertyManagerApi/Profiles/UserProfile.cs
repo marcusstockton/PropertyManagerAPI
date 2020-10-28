@@ -14,7 +14,9 @@ namespace PropertyManagerApi.Profiles
         /// </summary>
         public UserProfile()
         {
-            CreateMap<ApplicationUser, UserResponse>().ReverseMap();
+            CreateMap<ApplicationUser, UserResponseDto>()
+                .ForMember(x => x.EmailAddress, opt => opt.MapFrom(opt => opt.Email))
+                .ReverseMap();
             CreateMap<ApplicationUser, UserDto>()
                 .ForMember(x => x.DateOfBirth, opt => opt.MapFrom(opt => opt.DoB))
                 .ForMember(x => x.FirstName, opt => opt.MapFrom(opt => opt.FirstName))

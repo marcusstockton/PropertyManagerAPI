@@ -11,7 +11,7 @@ namespace PropertyManagerApi.Profiles
     {
         public PropertyProfile()
         {
-            CreateMap<Property, PropertyDetail>()
+            CreateMap<Property, PropertyDetailDto>()
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.NoOfBeds, opt => opt.MapFrom(src => src.NoOfBeds))
@@ -22,7 +22,7 @@ namespace PropertyManagerApi.Profiles
                 .ForMember(dest => dest.Tenants, opt => opt.MapFrom(src=>src.Tenants))
                 .ReverseMap();
 
-            CreateMap<Property, PropertyCreate>()
+            CreateMap<Property, PropertyCreateDto>()
                 .ForMember(dest => dest.AddressLine1, opt => opt.MapFrom(src => src.Address.Line1))
                 .ForMember(dest => dest.AddressLine2, opt => opt.MapFrom(src => src.Address.Line2))
                 .ForMember(dest => dest.AddressLine3, opt => opt.MapFrom(src => src.Address.Line3))

@@ -37,7 +37,7 @@ namespace PropertyManagerApi.Services
             return await _context.Properties.SingleOrDefaultAsync(x=>x.Id == propertyId && x.Portfolio.Id == portfolioId);
         }
 
-        public async Task<Property> GetPropertyDetails(Guid propertyId)
+        public async Task<Property> GetPropertyTenantAndAddressDetails(Guid propertyId)
         {
             return await _context.Properties
                 .Include(x=>x.Tenants)

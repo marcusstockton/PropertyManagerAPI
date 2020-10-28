@@ -1,26 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace PropertyManagerApi.Models.DTOs.Tenant
 {
-    public class Tenant_Detail
+    public class Tenant_CreateDto
     {
-        public Guid Id { get; set; }
-        public DateTime CreatedDateTime { get; set; }
-        public DateTime? UpdatedDateTime { get; set; }
-        public bool IsActive { get; set; }
         public string Title { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        [DataType(DataType.PhoneNumber), Required]
         public string ContactNumber { get; set; }
+
+        [DataType(DataType.EmailAddress), Required]
         public string EmailAddress { get; set; }
+
+        [DataType(DataType.Date), Required]
         public DateTime TenancyStartDate { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime? TenancyEndDate { get; set; }
         public string Profession { get; set; }
-        public List<Note> Notes { get; set; }
-        public string Image { get; set; }
 
+        [DataType(DataType.Upload)]
+        public IFormFile Profile { get; set; }
     }
 }

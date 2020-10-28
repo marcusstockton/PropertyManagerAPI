@@ -60,46 +60,53 @@ namespace PropertyManagerApi.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(tenant).State = EntityState.Modified;
-
-            try
+            if (ModelState.IsValid)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TenantExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                _context.Entry(tenant).State = EntityState.Modified;
 
-            return NoContent();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TenantExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return NoContent();
+            }
+            return BadRequest(ModelState);
         }
 
         // POST: api/Tenants
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Tenant>> PostTenant([FromForm]Tenant_Create value)
+        public async Task<ActionResult<Tenant>> PostTenant([FromForm]Tenant_CreateDto value)
         {
-            var newTenant = _mapper.Map<Tenant>(value);
-            _context.Tenants.Add(newTenant);
-
-            if (value.Profile != null)
+            if (ModelState.IsValid)
             {
-                // Save the file, return the file location
-                newTenant.Profile_Url = await _fileService.SaveFile(value.Profile, newTenant.Id);
+                var newTenant = _mapper.Map<Tenant>(value);
+                _context.Tenants.Add(newTenant);
+
+                if (value.Profile != null)
+                {
+                    // Save the file, return the file location
+                    newTenant.Profile_Url = await _fileService.SaveFile(value.Profile, newTenant.Id);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok(newTenant);
             }
-
-            await _context.SaveChangesAsync();
-
-            return Ok(newTenant);
+            return BadRequest(ModelState);
         }
 
         // DELETE: api/Tenants/5

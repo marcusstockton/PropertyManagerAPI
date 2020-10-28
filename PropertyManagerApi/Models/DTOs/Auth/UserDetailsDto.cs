@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PropertyManagerApi.Models.DTOs.Auth
 {
-    public class UserDetails
+    public class UserDetailsDto
     {
         public Guid Id { get; set; }
         public string Username { get; set; }

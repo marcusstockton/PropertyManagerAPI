@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Property;
-using PropertyManagerApi.Models.DTOs.Tenant;
 
 namespace PropertyManagerApi.Controllers
 {
@@ -34,11 +30,11 @@ namespace PropertyManagerApi.Controllers
         /// <param name="portfolioId">The Portfolio Id</param>
         /// <returns></returns>
         [HttpGet("{portfolioId}")]
-        public async Task<ActionResult<List<PropertyDetail>>> GetPropertiesByPortfolioId(Guid portfolioId)
+        public async Task<ActionResult<List<PropertyDetailDto>>> GetPropertiesByPortfolioId(Guid portfolioId)
         {
             var propertyList = await _propertyService.GetPropertiesForPortfolio(portfolioId);
 
-            var result = _mapper.Map<List<PropertyDetail>>(propertyList);
+            var result = _mapper.Map<List<PropertyDetailDto>>(propertyList);
             return Ok(result);
         }
 
@@ -63,15 +59,15 @@ namespace PropertyManagerApi.Controllers
             return @property;
         }
 
-        [HttpGet("GetPropertyDetails/{id}")]
-        public async Task<ActionResult<PropertyDetail>> GetPropertyDetails(Guid propertyId)
+        [HttpGet("GetPropertyDetails/{propertyId}")]
+        public async Task<ActionResult<PropertyDetailDto>> GetPropertyDetails(Guid propertyId)
         {
-            var @property = await _propertyService.GetPropertyDetails(propertyId);
+            var @property = await _propertyService.GetPropertyTenantAndAddressDetails(propertyId);
             if (@property == null)
             {
                 return NotFound();
             }
-            var result = _mapper.Map<PropertyDetail>(@property);
+            var result = _mapper.Map<PropertyDetailDto>(@property);
             
             return result;
         }
@@ -80,29 +76,36 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{portfolioId}/{id}")]
-        public async Task<IActionResult> PutProperty(Guid portfolioId, Guid id, PropertyDetail propertyDetail)
+        public async Task<IActionResult> PutProperty(Guid portfolioId, Guid id, PropertyDetailDto propertyDetail)
         {
             if (id != propertyDetail.Id)
             {
                 return BadRequest();
             }
+            if (ModelState.IsValid)
+            {
+                var property = _mapper.Map<Property>(propertyDetail);
+                await _propertyService.UpdateProperty(property, portfolioId);
 
-            var property = _mapper.Map<Property>(propertyDetail);
-            await _propertyService.UpdateProperty(property, portfolioId);
-
-            return NoContent();
+                return NoContent();
+            }
+            return BadRequest(ModelState);
         }
 
         // POST: api/Properties
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("{portfolioId}")]
-        public async Task<ActionResult<Property>> PostProperty(Guid portfolioId, PropertyCreate @property)
+        public async Task<ActionResult<Property>> PostProperty(Guid portfolioId, PropertyCreateDto @property)
         {
-            var newProperty = _mapper.Map<Property>(@property);
-            await _propertyService.CreateProperty(newProperty, portfolioId);
+            if (ModelState.IsValid)
+            {
+                var newProperty = _mapper.Map<Property>(@property);
+                await _propertyService.CreateProperty(newProperty, portfolioId);
 
-            return Ok(newProperty);
+                return Ok(newProperty);
+            }
+            return BadRequest(ModelState);
         }
 
         // DELETE: api/Properties/5

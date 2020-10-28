@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace PropertyManager.Api.Services
 {
     public class FileService : IFileService
@@ -45,6 +46,8 @@ namespace PropertyManager.Api.Services
             var bytes = await File.ReadAllBytesAsync(Path.Combine(_env.ContentRootPath, fileLocation));
             return Convert.ToBase64String(bytes);
         }
+
+        
 
         static string GetSafeFileName(string name, char replace = '_')
         {

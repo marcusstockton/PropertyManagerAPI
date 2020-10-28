@@ -38,11 +38,52 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\DTOs\Address\" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Update="TypewriterClasses\AddressDetailsDto.ts">
+      <CustomToolNamespace>Models\DTOs\Address\AddressDetailsDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\LoginDto.ts">
+      <CustomToolNamespace>Models\DTOs\Auth\LoginDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\PortfolioCreateDto.ts">
+      <CustomToolNamespace>Models\DTOs\Portfolio\PortfolioCreateDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\PortfolioDetailDto.ts">
+      <CustomToolNamespace>Models\DTOs\Portfolio\PortfolioDetailDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\PortfolioListItemDto.ts">
+      <CustomToolNamespace>Models\DTOs\Portfolio\PortfolioListItemDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\PropertyCreateDto.ts">
+      <CustomToolNamespace>Models\DTOs\Property\PropertyCreateDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\PropertyDetailDto.ts">
+      <CustomToolNamespace>Models\DTOs\Property\PropertyDetailDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\RegisterDto.ts">
+      <CustomToolNamespace>Models\DTOs\Auth\RegisterDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\Tenant_CreateDto.ts">
+      <CustomToolNamespace>Models\DTOs\Tenant\Tenant_CreateDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\Tenant_DetailDto.ts">
+      <CustomToolNamespace>Models\DTOs\Tenant\Tenant_DetailDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\UserDetailsDto.ts">
+      <CustomToolNamespace>Models\DTOs\Auth\UserDetailsDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\UserDto.ts">
+      <CustomToolNamespace>Models\DTOs\Auth\UserDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="TypewriterClasses\UserResponseDto.ts">
+      <CustomToolNamespace>Models\DTOs\Auth\UserResponseDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="UserDto.ts">
+      <CustomToolNamespace>Models\DTOs\Auth\UserDto.cs</CustomToolNamespace>
+    </None>
   </ItemGroup>
 
 </Project>

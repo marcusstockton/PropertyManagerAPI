@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PropertyManagerApi.Models.DTOs.Property
 {
-    public class PropertyCreate
+    public class PropertyCreateDto
     {
         [Required, MaxLength(100)]
         public string AddressLine1 { get; set; }

@@ -56,15 +56,13 @@ namespace PropertyManagerApi
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddCors(options =>
+            // Add Cors
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                options.AddPolicy("CorsPolicy", policy =>
-                {
-                    policy.WithOrigins("http://localhost:4200", "http://localhost:8080", "http://localhost:5050")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
+                builder.WithOrigins("http://localhost:4200", "http://localhost:5050")
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
@@ -155,7 +153,7 @@ namespace PropertyManagerApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors("CorsPolicy");
+                app.UseCors("MyPolicy");
                 // Enable middleware to serve generated Swagger as a JSON endpoint.
                 app.UseSwagger();
 
@@ -166,19 +164,19 @@ namespace PropertyManagerApi
                 });
             }
             app.UseStaticFiles();
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors("MyPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers().RequireCors("CorsPolicy");
+                endpoints.MapControllers().RequireCors("MyPolicy");
             });
+            app.UseHttpsRedirection();
 
             var task = Task.Run(() => seeder.SeedData());
             task.Wait();

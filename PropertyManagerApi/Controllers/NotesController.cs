@@ -51,30 +51,34 @@ namespace PropertyManagerApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutNote(Guid id, Note note)
         {
-            if (id != note.Id)
+            if (ModelState.IsValid)
             {
-                return BadRequest();
-            }
-
-            _context.Entry(note).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!NoteExists(id))
+                if (id != note.Id)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return NoContent();
+                _context.Entry(note).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!NoteExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return NoContent();
+            }
+            return BadRequest(ModelState);
         }
 
         // POST: api/Notes
@@ -83,10 +87,14 @@ namespace PropertyManagerApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Note>> PostNote(Note note)
         {
-            _context.Notes.Add(note);
-            await _context.SaveChangesAsync();
+            if (ModelState.IsValid)
+            {
+                _context.Notes.Add(note);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetNote), new { id = note.Id }, note);
+                return CreatedAtAction(nameof(GetNote), new { id = note.Id }, note);
+            }
+            return BadRequest(ModelState);
         }
 
         // DELETE: api/Notes/5

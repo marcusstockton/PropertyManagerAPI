@@ -232,3 +232,6 @@ _Pvt_Extensions
 .fake/
 /ClientApp/node_modules
 .vs/PropertyManager/v16/.suo
+
+
+/PropertyManagerApi/TypewriterClasses

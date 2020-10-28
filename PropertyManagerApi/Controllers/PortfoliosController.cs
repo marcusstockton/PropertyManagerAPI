@@ -4,7 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PropertyManager.Api.Models.DTOs.Portfolio;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
@@ -13,6 +15,7 @@ using PropertyManagerApi.Models.DTOs.Portfolio;
 namespace PropertyManagerApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class PortfoliosController : ControllerBase
     {
@@ -27,16 +30,17 @@ namespace PropertyManagerApi.Controllers
 
         // GET: api/Portfolios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Portfolio>>> GetPortfolios()
+        public async Task<ActionResult<IEnumerable<PortfolioListItemDto>>> GetPortfolios()
         {
             var userid = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var results = await _portfolioService.GetPortfolios(userid);
 
-            return Ok(await _portfolioService.GetPortfolios(userid));
+            return Ok(_mapper.Map<IEnumerable<PortfolioListItemDto>>(results));
         }
 
         // GET: api/Portfolios/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PortfolioDetail>> GetPortfolio(Guid id)
+        public async Task<ActionResult<PortfolioDetailDto>> GetPortfolio(Guid id)
         {
             var portfolio = await _portfolioService.GetPortfolioById(id);
 
@@ -44,12 +48,12 @@ namespace PropertyManagerApi.Controllers
             {
                 return NotFound();
             }
-            var portfolioDetail = _mapper.Map<PortfolioDetail>(portfolio);
+            var portfolioDetail = _mapper.Map<PortfolioDetailDto>(portfolio);
             return portfolioDetail;
         }
 
         [HttpGet("GetPortfolioAndProperties/{id}")]
-        public async Task<ActionResult<PortfolioDetail>> GetPortfolioAndProperties(Guid id)
+        public async Task<ActionResult<PortfolioDetailDto>> GetPortfolioAndProperties(Guid id)
         {
             var portfolio = await _portfolioService.GetPortfolioAndProperties(id);
 
@@ -57,7 +61,7 @@ namespace PropertyManagerApi.Controllers
             {
                 return NotFound();
             }
-            var portfolioDetail = _mapper.Map<PortfolioDetail>(portfolio);
+            var portfolioDetail = _mapper.Map<PortfolioDetailDto>(portfolio);
             return portfolioDetail;
         }
 
@@ -65,36 +69,44 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPortfolio(Guid id, PortfolioDetail portfolioDetail)
+        public async Task<IActionResult> PutPortfolio(Guid id, PortfolioDetailDto portfolioDetail)
         {
             if (id != portfolioDetail.Id)
             {
                 return BadRequest();
             }
-            var portfolio = _mapper.Map<Portfolio>(portfolioDetail);
+            if (ModelState.IsValid)
+            {
+                var portfolio = _mapper.Map<Portfolio>(portfolioDetail);
 
-            await _portfolioService.UpdatePortfolio(portfolio);
+                await _portfolioService.UpdatePortfolio(portfolio);
 
-            return NoContent();
+                return NoContent();
+            }
+            return BadRequest(ModelState);
         }
 
         // POST: api/Portfolios
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Portfolio>> PostPortfolio(PortfolioCreate portfolio)
+        public async Task<ActionResult<Portfolio>> PostPortfolio(PortfolioCreateDto portfolio)
         {
-            var newPortfolio = _mapper.Map<Portfolio>(portfolio);
-            var userid = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            Guid userId;
-            if (string.IsNullOrEmpty(userid) || !Guid.TryParse(userid, out userId) )
+            if (ModelState.IsValid)
             {
-                return Unauthorized();
+                var newPortfolio = _mapper.Map<Portfolio>(portfolio);
+                var userid = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                Guid userId;
+                if (string.IsNullOrEmpty(userid) || !Guid.TryParse(userid, out userId))
+                {
+                    return Unauthorized();
+                }
+
+                var createdPortfolio = await _portfolioService.CreatePortfolio(newPortfolio, userId);
+
+                return CreatedAtAction(nameof(GetPortfolio), new { id = createdPortfolio.Id }, createdPortfolio);
             }
-
-            var createdPortfolio = await _portfolioService.CreatePortfolio(newPortfolio, userId);
-
-            return CreatedAtAction(nameof(GetPortfolio), new { id = createdPortfolio.Id }, createdPortfolio);
+            return BadRequest(ModelState);
         }
 
         // DELETE: api/Portfolios/5

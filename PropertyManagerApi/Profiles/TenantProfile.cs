@@ -11,9 +11,9 @@ namespace PropertyManagerApi.Profiles
     {
         public TenantProfile()
         {
-            CreateMap<Tenant, Tenant_Create>().ReverseMap();
+            CreateMap<Tenant, Tenant_CreateDto>().ReverseMap();
             // Feck knows if this will work....
-            CreateMap<Tenant, Tenant_Detail>()
+            CreateMap<Tenant, Tenant_DetailDto>()
                 .ForMember(d => d.Image, opt => opt.MapFrom(o => o.Profile_Url)).AfterMap<FileResolver>()
                 .ForMember(x => x.ContactNumber, opt => opt.MapFrom(opt => opt.ContactNumber))
                 .ForMember(x => x.CreatedDateTime, opt => opt.MapFrom(opt => opt.CreatedDateTime))
@@ -34,14 +34,14 @@ namespace PropertyManagerApi.Profiles
     }
 
 
-    public class FileResolver : IMappingAction<Tenant, Tenant_Detail>
+    public class FileResolver : IMappingAction<Tenant, Tenant_DetailDto>
     {
         private readonly IFileService _fileService;
         public FileResolver(IFileService fileService)
         {
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
-        public void Process(Tenant source, Tenant_Detail destination, ResolutionContext context)
+        public void Process(Tenant source, Tenant_DetailDto destination, ResolutionContext context)
         {
             if (string.IsNullOrEmpty(source.Profile_Url))
             {
