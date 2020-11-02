@@ -8,9 +8,11 @@ namespace PropertyManagerApi.Models
     /// </summary>
     public class Property : Base
     {
+        public Guid AddressId { get; set; }
         /// <summary>
         /// Property Address
         /// </summary>
+
         public Address Address { get; set; }
 
         /// <summary>
@@ -48,6 +50,7 @@ namespace PropertyManagerApi.Models
         /// </summary>
         public List<Tenant> Tenants { get; set; }
 
+        public Guid PortfolioId { get; set; }
         /// <summary>
         /// Link back to the portfolio
         /// </summary>

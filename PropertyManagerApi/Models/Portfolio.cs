@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PropertyManagerApi.Models
@@ -13,6 +14,7 @@ namespace PropertyManagerApi.Models
         /// </summary>
         public string Name { get; set; }
 
+        public Guid OwnerId { get; set; }
         /// <summary>
         /// Portfolio Owner
         /// </summary>

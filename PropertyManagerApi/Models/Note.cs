@@ -1,4 +1,6 @@
-﻿namespace PropertyManagerApi.Models
+﻿using System;
+
+namespace PropertyManagerApi.Models
 {
     /// <summary>
     /// Note class

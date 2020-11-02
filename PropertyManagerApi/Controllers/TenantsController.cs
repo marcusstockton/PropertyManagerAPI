@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -123,6 +124,18 @@ namespace PropertyManagerApi.Controllers
             await _context.SaveChangesAsync();
 
             return tenant;
+        }
+        [HttpGet("job-title-autocomplete")]
+        public async Task<ActionResult> JobTitleAutoComplete(string jobTitle)
+        {
+            var url = $"http://api.dataatwork.org/v1/jobs/autocomplete?begins_with={jobTitle}";
+            HttpClient req = new HttpClient();
+            var content = await req.GetAsync(url);
+            if (content.IsSuccessStatusCode) 
+            {
+                return Ok(content.Content.ReadAsStringAsync());
+            }
+            return BadRequest(content);
         }
 
         private bool TenantExists(Guid id)
