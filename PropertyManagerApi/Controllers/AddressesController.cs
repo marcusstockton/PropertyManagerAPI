@@ -33,7 +33,7 @@ namespace PropertyManagerApi.Controllers // NOT SURE I NEED THIS CONTROLLER AS A
 
         // GET: api/Addresses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Address>> GetAddress(Guid id)
+        public async Task<ActionResult<Address>> GetAddressById(Guid id)
         {
             var address = await _context.Addresses.FindAsync(id);
 
@@ -49,7 +49,7 @@ namespace PropertyManagerApi.Controllers // NOT SURE I NEED THIS CONTROLLER AS A
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAddress(Guid id, Address address)
+        public async Task<IActionResult> UpdateAddress(Guid id, Address address)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +85,7 @@ namespace PropertyManagerApi.Controllers // NOT SURE I NEED THIS CONTROLLER AS A
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Address>> PostAddress(Address address)
+        public async Task<ActionResult<Address>> CreateAddress(Address address)
         {
             if (ModelState.IsValid)
             {

@@ -139,6 +139,7 @@ namespace PropertyManagerApi
 
             services.AddTransient<IPortfolioServce, PortfolioService>();
             services.AddTransient<IPropertyService, PropertyService>();
+            services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IFileService, FileService>();
 
             services.AddScoped<IUserService, UserService>();

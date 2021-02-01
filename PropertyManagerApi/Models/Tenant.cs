@@ -56,5 +56,7 @@ namespace PropertyManagerApi.Models
         /// List of notes for the tenant
         /// </summary>
         public List<Note> Notes { get; set; }
+
+        public virtual Property Property { get; set; }
     }
 }

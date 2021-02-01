@@ -7,7 +7,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertyManager.Api.Models.DTOs.Portfolio;
-using PropertyManagerApi.Data;
 using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Portfolio;
@@ -40,7 +39,7 @@ namespace PropertyManagerApi.Controllers
 
         // GET: api/Portfolios/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PortfolioDetailDto>> GetPortfolio(Guid id)
+        public async Task<ActionResult<PortfolioDetailDto>> GetPortfolioById(Guid id)
         {
             var portfolio = await _portfolioService.GetPortfolioById(id);
 
@@ -69,7 +68,7 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPortfolio(Guid id, PortfolioDetailDto portfolioDetail)
+        public async Task<IActionResult> UpdatePortfolio(Guid id, PortfolioDetailDto portfolioDetail)
         {
             if (id != portfolioDetail.Id)
             {
@@ -90,7 +89,7 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Portfolio>> PostPortfolio(PortfolioCreateDto portfolio)
+        public async Task<ActionResult<Portfolio>> CreatePortfolio(PortfolioCreateDto portfolio)
         {
             if (ModelState.IsValid)
             {
@@ -104,7 +103,7 @@ namespace PropertyManagerApi.Controllers
 
                 var createdPortfolio = await _portfolioService.CreatePortfolio(newPortfolio, userId);
 
-                return CreatedAtAction(nameof(GetPortfolio), new { id = createdPortfolio.Id }, createdPortfolio);
+                return CreatedAtAction(nameof(GetPortfolioById), new { id = createdPortfolio.Id }, createdPortfolio);
             }
             return BadRequest(ModelState);
         }

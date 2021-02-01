@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PropertyManager.Api.Interfaces;
-using PropertyManagerApi.Data;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Tenant;
 
@@ -19,67 +15,44 @@ namespace PropertyManagerApi.Controllers
     [ApiController]
     public class TenantsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IFileService _fileService;
+        private readonly ITenantService _tenantService;
         private readonly IMapper _mapper;
 
-        public TenantsController(ApplicationDbContext context, IMapper mapper, IFileService fileService)
+        public TenantsController(IMapper mapper, ITenantService tenantService)
         {
-            _context = context;
-            _fileService = fileService;
             _mapper = mapper;
-        }
-
-        // GET: api/Tenants
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tenant>>> GetTenants()
-        {
-            return await _context.Tenants.ToListAsync();
+            _tenantService = tenantService;
         }
 
         // GET: api/Tenants/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tenant>> GetTenant(Guid id)
+        public async Task<ActionResult<Tenant_DetailDto>> GetTenantById(Guid id)
         {
-            var tenant = await _context.Tenants.FindAsync(id);
-            
+            var tenant = await _tenantService.GetTenantById(id);
+
             if (tenant == null)
             {
                 return NotFound();
             }
 
-            return tenant;
+            return _mapper.Map<Tenant_DetailDto>(tenant);
         }
 
         // PUT: api/Tenants/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTenant(Guid id, Tenant tenant)
+        public async Task<IActionResult> UpdateTenant(Guid id, Tenant_DetailDto tenantDto)
         {
-            if (id != tenant.Id)
+            if (id != tenantDto.Id)
             {
                 return BadRequest();
             }
             if (ModelState.IsValid)
             {
-                _context.Entry(tenant).State = EntityState.Modified;
+                var tenant = _mapper.Map<Tenant>(tenantDto);
 
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TenantExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _tenantService.UpdateTenant(id, tenant);
 
                 return NoContent();
             }
@@ -90,41 +63,25 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Tenant>> PostTenant([FromForm]Tenant_CreateDto value)
+        public async Task<ActionResult<Tenant_DetailDto>> CreateTenant([FromForm]Tenant_CreateDto value)
         {
             if (ModelState.IsValid)
             {
                 var newTenant = _mapper.Map<Tenant>(value);
-                _context.Tenants.Add(newTenant);
+                var createdTenant = await _tenantService.CreateTenant(newTenant, value.Profile);
 
-                if (value.Profile != null)
-                {
-                    // Save the file, return the file location
-                    newTenant.Profile_Url = await _fileService.SaveFile(value.Profile, newTenant.Id);
-                }
-
-                await _context.SaveChangesAsync();
-
-                return Ok(newTenant);
+                return Ok(createdTenant);
             }
             return BadRequest(ModelState);
         }
 
         // DELETE: api/Tenants/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Tenant>> DeleteTenant(Guid id)
+        public async Task<ActionResult<bool>> DeleteTenant(Guid id)
         {
-            var tenant = await _context.Tenants.FindAsync(id);
-            if (tenant == null)
-            {
-                return NotFound();
-            }
-
-            _context.Tenants.Remove(tenant);
-            await _context.SaveChangesAsync();
-
-            return tenant;
+            return await _tenantService.DeleteTenant(id);
         }
+
         [HttpGet("job-title-autocomplete")]
         public async Task<ActionResult> JobTitleAutoComplete(string jobTitle)
         {
@@ -136,11 +93,6 @@ namespace PropertyManagerApi.Controllers
                 return Ok(content.Content.ReadAsStringAsync());
             }
             return BadRequest(content);
-        }
-
-        private bool TenantExists(Guid id)
-        {
-            return _context.Tenants.Any(e => e.Id == id);
         }
     }
 }

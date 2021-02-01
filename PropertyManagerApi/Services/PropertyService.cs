@@ -92,13 +92,16 @@ namespace PropertyManagerApi.Services
             return property;
         }
 
-        public async Task<bool> DeleteProperty(Guid propertyId)
+        public async Task<bool> DeleteProperty(Guid portfolioId, Guid propertyId)
         {
             var property = await _context.Properties.FindAsync(propertyId);
             if (property != null)
             {
-                _context.Properties.Remove(property);
-                return (await _context.SaveChangesAsync() > 0);
+                if(property.PortfolioId == portfolioId)
+                {
+                    _context.Properties.Remove(property);
+                    return (await _context.SaveChangesAsync() > 0);
+                }
             }
             return false;
         }

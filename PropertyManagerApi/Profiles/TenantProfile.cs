@@ -14,7 +14,7 @@ namespace PropertyManagerApi.Profiles
             CreateMap<Tenant, Tenant_CreateDto>().ReverseMap();
             // Feck knows if this will work....
             CreateMap<Tenant, Tenant_DetailDto>()
-                .ForMember(d => d.Image, opt => opt.MapFrom(o => o.Profile_Url)).AfterMap<FileResolver>()
+                .ForMember(d => d.Image, opt => opt.MapFrom(o => o.Profile_Url))//.AfterMap<FileResolver>()
                 .ForMember(x => x.ContactNumber, opt => opt.MapFrom(opt => opt.ContactNumber))
                 .ForMember(x => x.CreatedDateTime, opt => opt.MapFrom(opt => opt.CreatedDateTime))
                 .ForMember(x => x.EmailAddress, opt => opt.MapFrom(opt => opt.EmailAddress))

@@ -33,7 +33,7 @@ namespace PropertyManagerApi.Controllers
 
         // GET: api/Notes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Note>> GetNote(Guid id)
+        public async Task<ActionResult<Note>> GetNoteById(Guid id)
         {
             var note = await _context.Notes.FindAsync(id);
 
@@ -49,7 +49,7 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutNote(Guid id, Note note)
+        public async Task<IActionResult> UpdateNote(Guid id, Note note)
         {
             if (ModelState.IsValid)
             {
@@ -85,14 +85,14 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Note>> PostNote(Note note)
+        public async Task<ActionResult<Note>> CreateNote(Note note)
         {
             if (ModelState.IsValid)
             {
                 _context.Notes.Add(note);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetNote), new { id = note.Id }, note);
+                return CreatedAtAction(nameof(GetNoteById), new { id = note.Id }, note);
             }
             return BadRequest(ModelState);
         }

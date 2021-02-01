@@ -47,7 +47,7 @@ namespace PropertyManagerApi.Controllers
 
         // GET: api/Properties/5
         [HttpGet("{portfolioId}/{id}")]
-        public async Task<ActionResult<Property>> GetProperty(Guid portfolioId, Guid id)
+        public async Task<ActionResult<Property>> GetPropertyById(Guid portfolioId, Guid id)
         {
             var @property = await _propertyService.GetPropertyById(portfolioId, id);
 
@@ -76,7 +76,7 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{portfolioId}/{id}")]
-        public async Task<IActionResult> PutProperty(Guid portfolioId, Guid id, PropertyDetailDto propertyDetail)
+        public async Task<IActionResult> UpdateProperty(Guid portfolioId, Guid id, PropertyDetailDto propertyDetail)
         {
             if (id != propertyDetail.Id)
             {
@@ -96,7 +96,7 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("{portfolioId}")]
-        public async Task<ActionResult<Property>> PostProperty(Guid portfolioId, PropertyCreateDto @property)
+        public async Task<ActionResult<Property>> CreateProperty(Guid portfolioId, PropertyCreateDto @property)
         {
             if (ModelState.IsValid)
             {
@@ -112,7 +112,7 @@ namespace PropertyManagerApi.Controllers
         [HttpDelete("{portfolioId}/{id}")]
         public async Task<ActionResult<bool>> DeleteProperty(Guid portfolioId, Guid id)
         {
-            return await _propertyService.DeleteProperty(id);
+            return await _propertyService.DeleteProperty(portfolioId, id);
         }
     }
 }

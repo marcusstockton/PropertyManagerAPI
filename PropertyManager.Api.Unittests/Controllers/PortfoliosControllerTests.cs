@@ -92,7 +92,7 @@ namespace PropertyManagerApi.Controllers.Tests
             {
                 HttpContext = new DefaultHttpContext() { User = _principle }
             };
-            var results = await controller.GetPortfolio(It.IsAny<Guid>());
+            var results = await controller.GetPortfolioById(It.IsAny<Guid>());
             Assert.IsNotNull(results);
             var okResult = results.Result as OkObjectResult;
             Assert.AreEqual((int)HttpStatusCode.OK, okResult.StatusCode);
