@@ -120,9 +120,9 @@ namespace PropertyManagerApi.Data
                     .RuleFor(x => x.AddressId, f => addresses.Generate().Id)
                     .RuleFor(x => x.Description, f => f.Lorem.Paragraph(rnd.Next(3, 7)))
                     .RuleFor(x => x.NoOfBeds, f => f.Random.Int(1, 4))
-                    .RuleFor(x => x.PropertyValue, f => Math.Round(f.Random.Double(50000, 130000), 2))
-                    .RuleFor(x => x.PurchasePrice, f => Math.Round(f.Random.Double(42000, 120000), 2))
-                    .RuleFor(x => x.RentalPrice, f => Math.Round(f.Random.Double(400, 1300), 2))
+                    .RuleFor(x => x.PropertyValue, f => Math.Round(f.Random.Decimal(50000, 130000), 2))
+                    .RuleFor(x => x.PurchasePrice, f => Math.Round(f.Random.Decimal(42000, 120000), 2))
+                    .RuleFor(x => x.RentalPrice, f => Math.Round(f.Random.Decimal(400, 1300), 2))
                     .RuleFor(x => x.Tenants, personFaker.Generate(rnd.Next(2, 6)))
                     .RuleFor(x => x.PurchaseDate, f => f.Date.Past().Date);
 

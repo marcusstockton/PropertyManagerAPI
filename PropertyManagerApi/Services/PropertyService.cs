@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
@@ -12,9 +13,11 @@ namespace PropertyManagerApi.Services
     public class PropertyService : IPropertyService
     {
         private readonly ApplicationDbContext _context;
-        public PropertyService(ApplicationDbContext context)
+        private readonly IUserService _userService;
+        public PropertyService(ApplicationDbContext context, IUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         public async Task<IList<Property>> GetPropertiesForPortfolio(Guid portfolioId)
@@ -24,6 +27,7 @@ namespace PropertyManagerApi.Services
                 .Include(x=>x.Tenants)
                 .AsNoTracking()
                 .Where(x => x.Portfolio.Id == portfolioId && x.IsActive)
+                .Where(x=>x.Portfolio.OwnerId == _userService.GetLoggedInUserId())
                 .ToListAsync();
         }
 

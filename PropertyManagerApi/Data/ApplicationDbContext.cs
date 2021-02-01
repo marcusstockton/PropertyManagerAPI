@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PropertyManagerApi.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,21 +53,6 @@ namespace PropertyManagerApi.Data
             {
                 E.Property("UpdatedDateTime").CurrentValue = DateTime.Now;
             });
-
-            //var changedEntities = AddedEntities.Concat(EditedEntities);
-            //var errors = new List<ValidationResult>(); // all errors are here
-            //foreach (var e in changedEntities)
-            //{
-            //    var vc = new ValidationContext(e.Entity, null, null);
-            //    Validator.TryValidateObject(
-            //        e.Entity, vc, errors, validateAllProperties: true);
-            //}
-            //if (errors.Any())
-            //{
-            //    System.Diagnostics.Debugger.Break();
-            //    var errorList = errors.Select(x => x.ErrorMessage);
-            //    throw new ArgumentException();
-            //}
 
             return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }

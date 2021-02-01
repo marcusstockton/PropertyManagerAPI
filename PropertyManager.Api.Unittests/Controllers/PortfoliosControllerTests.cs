@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using PropertyManager.Api.Models.DTOs.Portfolio;
 using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Portfolio;
+using PropertyManagerApi.Profiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,15 +22,22 @@ namespace PropertyManagerApi.Controllers.Tests
     public class PortfoliosControllerTests
     {
         private Mock<IPortfolioServce> _portfolioServceMock;
-        private Mock<IMapper> _mapperMock;
+        private IMapper _mapperMock;
         private GenericIdentity _identity;
         private ApplicationUser _user;
         private ApplicationUser _user2;
         private ClaimsPrincipal _principle;
         public PortfoliosControllerTests()
         {
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new PortfolioProfile());
+                mc.AddProfile(new UserProfile());
+            });
+
+            _mapperMock = new Mapper(mappingConfig);
+
             _portfolioServceMock = new Mock<IPortfolioServce>();
-            _mapperMock = new Mock<IMapper>();
         }
 
         [TestInitialize]
@@ -47,8 +56,6 @@ namespace PropertyManagerApi.Controllers.Tests
                 new Claim("custom-claim", "example claim value"),
             }, "mock"));
 
-            _mapperMock.Setup(m => m.Map<Portfolio, PortfolioCreateDto>(It.IsAny<Portfolio>())).Returns(new PortfolioCreateDto());
-            _mapperMock.Setup(m => m.Map<Portfolio, PortfolioDetailDto>(It.IsAny<Portfolio>())).Returns(new PortfolioDetailDto());
         }
 
         [TestMethod()]
@@ -68,7 +75,7 @@ namespace PropertyManagerApi.Controllers.Tests
             _portfolioServceMock.Setup(s => s.GetPortfolios(It.IsAny<string>()))
                 .Returns(Task.FromResult<IEnumerable<Portfolio>>(portfolioList.Where(x=>x.Owner==_user))).Verifiable();
 
-            var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock.Object);
+            var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock);
             controller.ControllerContext = new ControllerContext()
             {
                 HttpContext = new DefaultHttpContext() { User = _principle }
@@ -76,7 +83,7 @@ namespace PropertyManagerApi.Controllers.Tests
 
             var results = await controller.GetPortfolios();
             var okResult = results.Result as OkObjectResult;
-            var okVal = okResult.Value as IEnumerable<PortfolioDetailDto>;
+            var okVal = okResult.Value as IEnumerable<PortfolioListItemDto>;
             Assert.AreEqual((int)System.Net.HttpStatusCode.OK, okResult.StatusCode);
             Assert.AreEqual(1, okVal.Count());
         }
@@ -87,7 +94,7 @@ namespace PropertyManagerApi.Controllers.Tests
             var portfolio = new Portfolio{Id = Guid.NewGuid(), CreatedDateTime = DateTime.Now, Name = "Test", Owner = _user, IsActive = true};
             _portfolioServceMock.Setup(x=>x.GetPortfolioById(It.IsAny<Guid>())).ReturnsAsync(portfolio);
 
-            var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock.Object);
+            var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock);
             controller.ControllerContext = new ControllerContext()
             {
                 HttpContext = new DefaultHttpContext() { User = _principle }
@@ -98,9 +105,6 @@ namespace PropertyManagerApi.Controllers.Tests
             Assert.AreEqual((int)HttpStatusCode.OK, okResult.StatusCode);
 
             var okVal = okResult.Value as PortfolioDetailDto;
-            
-
-            // Assert.Fail();
         }
 
         [TestMethod()]

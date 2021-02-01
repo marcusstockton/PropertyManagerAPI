@@ -47,8 +47,8 @@ namespace PropertyManagerApi.Controllers
             {
                 return NotFound();
             }
-            var portfolioDetail = _mapper.Map<PortfolioDetailDto>(portfolio);
-            return portfolioDetail;
+            
+            return Ok(_mapper.Map<PortfolioDetailDto>(portfolio));
         }
 
         [HttpGet("GetPortfolioAndProperties/{id}")]

@@ -144,7 +144,6 @@ namespace PropertyManagerApi
 
             services.AddScoped<IUserService, UserService>();
 
-
             services.AddTransient<DataSeeder>();
         }
 

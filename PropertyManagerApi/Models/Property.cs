@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PropertyManagerApi.Models
 {
@@ -23,12 +24,14 @@ namespace PropertyManagerApi.Models
         /// <summary>
         /// Property purchase price
         /// </summary>
-        public double PurchasePrice { get; set; }
-        
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal PurchasePrice { get; set; }
+
         /// <summary>
         /// Property value
         /// </summary>
-        public double PropertyValue { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal PropertyValue { get; set; }
 
         /// <summary>
         /// Description of property
@@ -43,7 +46,8 @@ namespace PropertyManagerApi.Models
         /// <summary>
         /// Property rental price
         /// </summary>
-        public double RentalPrice { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal RentalPrice { get; set; }
 
         /// <summary>
         /// List of tenants at the property

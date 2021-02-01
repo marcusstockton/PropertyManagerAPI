@@ -32,6 +32,7 @@ namespace PropertyManagerApi.Controllers
         [HttpGet("{portfolioId}")]
         public async Task<ActionResult<List<PropertyDetailDto>>> GetPropertiesByPortfolioId(Guid portfolioId)
         {
+            
             var propertyList = await _propertyService.GetPropertiesForPortfolio(portfolioId);
 
             var result = _mapper.Map<List<PropertyDetailDto>>(propertyList);
