@@ -12,9 +12,11 @@ namespace PropertyManagerApi.Models
         /// <summary>
         /// Portfolio Name
         /// </summary>
+        [MaxLength(100)]
         public string Name { get; set; }
 
         public Guid OwnerId { get; set; }
+
         /// <summary>
         /// Portfolio Owner
         /// </summary>

@@ -24,7 +24,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace PropertyManagerApi
 {
     public class Startup
@@ -39,7 +38,7 @@ namespace PropertyManagerApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            if(Environment.MachineName != "DEVELOPER-06")
+            if (Environment.MachineName != "DEVELOPER-06")
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -51,7 +50,7 @@ namespace PropertyManagerApi
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultSqliteConnection")));
             }
-            
+
             services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -78,7 +77,7 @@ namespace PropertyManagerApi
                 });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n
                       Enter 'Bearer' [space] and then your token in the text input below.
                       \r\n\r\nExample: 'Bearer 12345abcdef'",
                     Name = "Authorization",

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PropertyManagerApi.Models;
@@ -37,7 +36,7 @@ namespace PropertyManagerApi.Data
         {
             var AddedEntities = ChangeTracker.Entries()
                 .Where(E => E.State == EntityState.Added)
-                .Where(E=>E.Entity.GetType().BaseType.Name == "Base")
+                .Where(E => E.Entity.GetType().BaseType.Name == "Base")
                 .ToList();
             AddedEntities.ForEach(E =>
             {

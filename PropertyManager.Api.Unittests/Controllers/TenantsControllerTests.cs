@@ -1,8 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PropertyManagerApi.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PropertyManagerApi.Controllers.Tests
 {

@@ -20,22 +20,24 @@ namespace PropertyManagerApi.Services
             _context = context;
             _logger = logger;
         }
+
         public async Task<IEnumerable<Portfolio>> GetPortfolios(string userId)
         {
             return await _context.Portfolios
                 .AsNoTracking()
-                .Include(x=>x.Owner)
-                .Include(x=>x.Properties)
-                .Where(x=>x.Owner.Id == Guid.Parse(userId))
+                .Include(x => x.Owner)
+                .Include(x => x.Properties)
+                .Where(x => x.Owner.Id == Guid.Parse(userId))
                 .ToListAsync();
         }
 
         public async Task<Portfolio> GetPortfolioById(Guid portfolioId)
         {
             return await _context.Portfolios
-                .Include(x=>x.Owner)
-                .FirstOrDefaultAsync(x=>x.Id == portfolioId);
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Id == portfolioId);
         }
+
         public async Task<Portfolio> GetPortfolioAndProperties(Guid portfolioId)
         {
             return await _context.Portfolios
@@ -62,7 +64,7 @@ namespace PropertyManagerApi.Services
                 _logger.LogError("Error updating portfolio with id {PORTFOLIOID}. Error: {ERROR}", portfolio.Id, ex);
                 return portfolio;
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 _logger.LogError("Error updating portfolio with id {PORTFOLIOID}. Error: {ERROR}", portfolio.Id, ex);
                 return portfolio;
@@ -99,7 +101,7 @@ namespace PropertyManagerApi.Services
         {
             _logger.LogInformation("Called into Delete Portfolio. Searching for Portfolio Id {PORTFOLIOID}", portfolioId);
             var portfolio = await _context.Portfolios.FindAsync(portfolioId);
-            if(portfolio == null)
+            if (portfolio == null)
             {
                 _logger.LogError("Unable to find a portfolio with Portfolio Id {PORTFOLIOID}", portfolioId);
                 return false;

@@ -22,13 +22,17 @@ namespace PropertyManagerApi.Services
     public interface IUserService
     {
         ApplicationUser Authenticate(ApplicationUser user);
+
         IEnumerable<ApplicationUser> GetAllUsersWithoutFirstName();
+
         Task<IdentityResult> RegisterUser(RegisterDto user);
+
         Task<ApplicationUser> ValidateUser(LoginDto userParam);
+
         Guid GetLoggedInUserId();
+
         Task<ApplicationUser> GetUserById(Guid id);
     }
-
 
     /// <summary>
     /// User service.
@@ -84,7 +88,6 @@ namespace PropertyManagerApi.Services
             return user;
         }
 
-
         /// <summary>
         /// Gets All Users Without FirstName
         /// </summary>
@@ -138,7 +141,6 @@ namespace PropertyManagerApi.Services
             return Guid.Empty;
         }
 
-
         /// <summary>
         /// Gets the user by Id
         /// </summary>
@@ -155,4 +157,3 @@ namespace PropertyManagerApi.Services
         }
     }
 }
-

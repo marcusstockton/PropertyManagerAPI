@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PropertyManagerApi.Models
 {
@@ -10,6 +10,7 @@ namespace PropertyManagerApi.Models
         /// <summary>
         /// Title of the note
         /// </summary>
+        [MaxLength(200)]
         public string Title { get; set; }
 
         /// <summary>

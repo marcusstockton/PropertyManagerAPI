@@ -40,6 +40,7 @@ namespace PropertyManagerApi.Helpers
                 operation.RequestBody.Content["multipart/form-data"].Schema.Description = uploadFile.Example;
             }
         }
+
         private class SwaggerUploadFile
         {
             public string Parameter { get; set; }

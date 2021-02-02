@@ -21,7 +21,6 @@ namespace PropertyManagerApi.Services.Tests
         private Guid portfolio1Id = Guid.NewGuid();
         private Guid portfolio2Id = Guid.NewGuid();
 
-
         public PortfolioServiceTests()
         {
             _options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -146,7 +145,8 @@ namespace PropertyManagerApi.Services.Tests
             var portfolioService = new PortfolioService(dbContext, _logger.Object);
 
             var newPortfolioId = Guid.NewGuid();
-            var newPortfolio = new Portfolio{
+            var newPortfolio = new Portfolio
+            {
                 Id = newPortfolioId,
                 Name = "New Portfolio",
                 Owner = dbContext.Users.Find(user2Id)
@@ -191,7 +191,6 @@ namespace PropertyManagerApi.Services.Tests
                 UserName = "TestUser2@test.com",
                 Email = "TestUser2@test.com",
             };
-
 
             var portfolio1 = new Portfolio
             {

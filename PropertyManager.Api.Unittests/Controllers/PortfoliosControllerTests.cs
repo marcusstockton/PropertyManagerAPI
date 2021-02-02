@@ -27,6 +27,7 @@ namespace PropertyManagerApi.Controllers.Tests
         private ApplicationUser _user;
         private ApplicationUser _user2;
         private ClaimsPrincipal _principle;
+
         public PortfoliosControllerTests()
         {
             var mappingConfig = new MapperConfiguration(mc =>
@@ -55,7 +56,6 @@ namespace PropertyManagerApi.Controllers.Tests
                 new Claim(ClaimTypes.NameIdentifier, _user.Id.ToString()),
                 new Claim("custom-claim", "example claim value"),
             }, "mock"));
-
         }
 
         [TestMethod()]
@@ -73,7 +73,7 @@ namespace PropertyManagerApi.Controllers.Tests
             };
 
             _portfolioServceMock.Setup(s => s.GetPortfolios(It.IsAny<string>()))
-                .Returns(Task.FromResult<IEnumerable<Portfolio>>(portfolioList.Where(x=>x.Owner==_user))).Verifiable();
+                .Returns(Task.FromResult<IEnumerable<Portfolio>>(portfolioList.Where(x => x.Owner == _user))).Verifiable();
 
             var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock);
             controller.ControllerContext = new ControllerContext()
@@ -91,8 +91,8 @@ namespace PropertyManagerApi.Controllers.Tests
         [TestMethod()]
         public async Task Get_Portfolio_By_Id_Returns_Correct_Portfolio()
         {
-            var portfolio = new Portfolio{Id = Guid.NewGuid(), CreatedDateTime = DateTime.Now, Name = "Test", Owner = _user, IsActive = true};
-            _portfolioServceMock.Setup(x=>x.GetPortfolioById(It.IsAny<Guid>())).ReturnsAsync(portfolio);
+            var portfolio = new Portfolio { Id = Guid.NewGuid(), CreatedDateTime = DateTime.Now, Name = "Test", Owner = _user, IsActive = true };
+            _portfolioServceMock.Setup(x => x.GetPortfolioById(It.IsAny<Guid>())).ReturnsAsync(portfolio);
 
             var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock);
             controller.ControllerContext = new ControllerContext()

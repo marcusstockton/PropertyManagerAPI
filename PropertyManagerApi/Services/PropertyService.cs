@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
@@ -14,6 +13,7 @@ namespace PropertyManagerApi.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IUserService _userService;
+
         public PropertyService(ApplicationDbContext context, IUserService userService)
         {
             _context = context;
@@ -23,11 +23,11 @@ namespace PropertyManagerApi.Services
         public async Task<IList<Property>> GetPropertiesForPortfolio(Guid portfolioId)
         {
             return await _context.Properties
-                .Include(x=>x.Address)
-                .Include(x=>x.Tenants)
+                .Include(x => x.Address)
+                .Include(x => x.Tenants)
                 .AsNoTracking()
                 .Where(x => x.Portfolio.Id == portfolioId && x.IsActive)
-                .Where(x=>x.Portfolio.OwnerId == _userService.GetLoggedInUserId())
+                .Where(x => x.Portfolio.OwnerId == _userService.GetLoggedInUserId())
                 .ToListAsync();
         }
 
@@ -38,15 +38,15 @@ namespace PropertyManagerApi.Services
 
         public async Task<Property> GetPropertyById(Guid portfolioId, Guid propertyId)
         {
-            return await _context.Properties.SingleOrDefaultAsync(x=>x.Id == propertyId && x.Portfolio.Id == portfolioId);
+            return await _context.Properties.SingleOrDefaultAsync(x => x.Id == propertyId && x.Portfolio.Id == portfolioId);
         }
 
         public async Task<Property> GetPropertyTenantAndAddressDetails(Guid propertyId)
         {
             return await _context.Properties
-                .Include(x=>x.Tenants)
-                .Include(x=>x.Address)
-                .SingleAsync(x=>x.Id == propertyId);
+                .Include(x => x.Tenants)
+                .Include(x => x.Address)
+                .SingleAsync(x => x.Id == propertyId);
         }
 
         public async Task<Property> CreateProperty(Property property, Guid portfolioId)
@@ -59,14 +59,14 @@ namespace PropertyManagerApi.Services
             //await _context.Properties.AddAsync(property);
             //await _context.Addresses.AddAsync(property.Address);
             await _context.SaveChangesAsync();
-            
+
             return property;
         }
 
         public async Task<Property> AddAddressToProperty(Guid propertyId, Address address)
         {
             var property = await _context.Properties.FindAsync(propertyId);
-            if(property != null)
+            if (property != null)
             {
                 property.Address = address;
                 _context.Properties.Update(property);
@@ -79,7 +79,7 @@ namespace PropertyManagerApi.Services
         public async Task<Property> AddTenantsToProperty(Guid propertyId, List<Tenant> tenants)
         {
             var property = await _context.Properties.FindAsync(propertyId);
-            if(property != null)
+            if (property != null)
             {
                 property.Tenants.AddRange(tenants);
                 _context.Properties.Update(property);
@@ -101,7 +101,7 @@ namespace PropertyManagerApi.Services
             var property = await _context.Properties.FindAsync(propertyId);
             if (property != null)
             {
-                if(property.PortfolioId == portfolioId)
+                if (property.PortfolioId == portfolioId)
                 {
                     _context.Properties.Remove(property);
                     return (await _context.SaveChangesAsync() > 0);
@@ -109,7 +109,5 @@ namespace PropertyManagerApi.Services
             }
             return false;
         }
-
-
     }
 }

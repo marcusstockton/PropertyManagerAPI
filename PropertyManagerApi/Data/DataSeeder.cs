@@ -1,14 +1,11 @@
 ﻿using AutoBogus;
-using Bogus;
 using Bogus.Extensions;
-using Bogus.Extensions.UnitedKingdom;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using PropertyManagerApi.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace PropertyManagerApi.Data
 {
@@ -17,12 +14,14 @@ namespace PropertyManagerApi.Data
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
+
         public DataSeeder(ApplicationDbContext context, IServiceProvider service, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
         {
             _context = service.GetRequiredService<ApplicationDbContext>();
             _roleManager = service.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
             _userManager = userManager;
         }
+
         public async Task SeedData()
         {
             if (!_context.Roles.Any())
@@ -73,12 +72,12 @@ namespace PropertyManagerApi.Data
             }
             if (!_context.Portfolios.Any())
             {
-                var jobs = new[] { "Cleaner", "Software Developer", "Journal Manager", "Head of Marketing", "Mechanic", "Shop Assistant", "Builder", "Electrician", "Accountant", 
+                var jobs = new[] { "Cleaner", "Software Developer", "Journal Manager", "Head of Marketing", "Mechanic", "Shop Assistant", "Builder", "Electrician", "Accountant",
                     "Nurse Practitioner", "Librarian", "Dog Trainer", "Delivery Driver", "Yoga Instructor", "Tech Support", "Cyber Security", "Biomedical Engineering", "Iron and Steel Worker",
                     "Sheet Metal Worker", "Clinical Nurse Specialist", "Nurse Practitioner", "Account Management","Quality Executive", "Risk Executive", "Accounting Specialist", "Accountant"};
                 var maleTitles = new[] { "Dr", "Mr", "Rev", "Sr", "Prof", "Lord" };
                 var femaleTitles = new[] { "Mrs", "Miss", "Ms", "Lady", "Mx" };
-                var townNames = new[] { "Ossett", "Bradley Stoke", "Malton", "Swaffham", "Ramsey", "Saffron Walden", "Stockton-on-Tees", "Knares", "Horley", 
+                var townNames = new[] { "Ossett", "Bradley Stoke", "Malton", "Swaffham", "Ramsey", "Saffron Walden", "Stockton-on-Tees", "Knares", "Horley",
                     "Ampthill", "Boston", "Sleaford", "Wakefield", "Hingham", "Northwich", "Canterbury", "Wadebridge", "Fowey", "Reading", "Wymondham", "Warrington",
                     "Northleach with Eastington", "Brentford", "Portsmouth", "Crediton", "Exeter", "Paignton", "Chester-le-Street", };
                 var users = _context.Users.ToArray();
@@ -93,7 +92,7 @@ namespace PropertyManagerApi.Data
 
                 var notes = new AutoFaker<Note>()
                     .RuleFor(x => x.Description, f => f.Lorem.Paragraph(rnd.Next(3, 5)))
-                    .RuleFor(x=>x.Title, f=>f.Lorem.Sentence(rnd.Next(2, 5)));
+                    .RuleFor(x => x.Title, f => f.Lorem.Sentence(rnd.Next(2, 5)));
 
                 var personFaker = new AutoFaker<Tenant>()
                       .RuleFor(x => x.Id, f => f.Random.Guid())
@@ -111,10 +110,10 @@ namespace PropertyManagerApi.Data
 
                 var addresses = new AutoFaker<Address>()
                     .RuleFor(x => x.City, f => f.Address.City())
-                    .RuleFor(x=>x.Line1, f=>f.Address.StreetAddress())
-                    .RuleFor(x=>x.Line2, f=>f.Address.SecondaryAddress())
-                    .RuleFor(x=>x.PostCode, f=>f.Address.ZipCode("??# #??"))
-                    .RuleFor(x=>x.Town, f=>f.PickRandom(townNames));
+                    .RuleFor(x => x.Line1, f => f.Address.StreetAddress())
+                    .RuleFor(x => x.Line2, f => f.Address.SecondaryAddress())
+                    .RuleFor(x => x.PostCode, f => f.Address.ZipCode("??# #??"))
+                    .RuleFor(x => x.Town, f => f.PickRandom(townNames));
 
                 var properties = new AutoFaker<Property>()
                     .RuleFor(x => x.AddressId, f => addresses.Generate().Id)

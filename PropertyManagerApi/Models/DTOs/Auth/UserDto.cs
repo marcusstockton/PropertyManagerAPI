@@ -9,6 +9,7 @@ namespace PropertyManagerApi.Models.DTOs.Auth
         public string LastName { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string Username { get; set; }
+
         public string FullName
         {
             get

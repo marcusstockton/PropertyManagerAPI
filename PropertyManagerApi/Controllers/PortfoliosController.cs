@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertyManager.Api.Models.DTOs.Portfolio;
 using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Portfolio;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace PropertyManagerApi.Controllers
 {
@@ -47,7 +47,7 @@ namespace PropertyManagerApi.Controllers
             {
                 return NotFound();
             }
-            
+
             return Ok(_mapper.Map<PortfolioDetailDto>(portfolio));
         }
 
@@ -113,7 +113,7 @@ namespace PropertyManagerApi.Controllers
         public async Task<ActionResult> DeletePortfolio(Guid id)
         {
             await _portfolioService.DeletePortfolio(id);
-            
+
             return NoContent();
         }
     }

@@ -11,7 +11,7 @@ namespace PropertyManagerApi.Profiles
         {
             CreateMap<Portfolio, PortfolioCreateDto>().ReverseMap();
             CreateMap<Portfolio, PortfolioDetailDto>()
-                .ForMember(x=>x.Owner, dest=>dest.MapFrom(x=>x.Owner)) // Causing me issues.
+                .ForMember(x => x.Owner, dest => dest.MapFrom(x => x.Owner)) // Causing me issues.
                 .ReverseMap();
             CreateMap<Portfolio, PortfolioListItemDto>()
                 .ForMember(dest => dest.PropertyCount, opt => opt.MapFrom(src => src.Properties.Count))

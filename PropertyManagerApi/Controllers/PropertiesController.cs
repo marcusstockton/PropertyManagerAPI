@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Property;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PropertyManagerApi.Controllers
 {
@@ -32,7 +32,6 @@ namespace PropertyManagerApi.Controllers
         [HttpGet("{portfolioId}")]
         public async Task<ActionResult<List<PropertyDetailDto>>> GetPropertiesByPortfolioId(Guid portfolioId)
         {
-            
             var propertyList = await _propertyService.GetPropertiesForPortfolio(portfolioId);
 
             var result = _mapper.Map<List<PropertyDetailDto>>(propertyList);
@@ -69,7 +68,7 @@ namespace PropertyManagerApi.Controllers
                 return NotFound();
             }
             var result = _mapper.Map<PropertyDetailDto>(@property);
-            
+
             return result;
         }
 

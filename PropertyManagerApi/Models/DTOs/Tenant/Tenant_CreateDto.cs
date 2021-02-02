@@ -21,6 +21,7 @@ namespace PropertyManagerApi.Models.DTOs.Tenant
 
         [DataType(DataType.Date)]
         public DateTime? TenancyEndDate { get; set; }
+
         public string Profession { get; set; }
 
         [DataType(DataType.Upload)]

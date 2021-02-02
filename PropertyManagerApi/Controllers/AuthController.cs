@@ -1,14 +1,12 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Auth;
 using PropertyManagerApi.Services;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace PropertyManagerApi.Controllers
 {
@@ -61,7 +59,6 @@ namespace PropertyManagerApi.Controllers
             return Ok(userResult);
         }
 
-
         /// <summary>
         /// Register a new user
         /// </summary>
@@ -91,7 +88,6 @@ namespace PropertyManagerApi.Controllers
             }
             _logger.LogError($"An Error occured registering a new user");
             return (BadRequest(result.Errors));
-
         }
 
         /// <summary>
@@ -113,7 +109,7 @@ namespace PropertyManagerApi.Controllers
         public async Task<IActionResult> GetLoggedInUserDetails()
         {
             var user_id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if(Guid.TryParse(user_id, out Guid userId))
+            if (Guid.TryParse(user_id, out Guid userId))
             {
                 var user = await _userService.GetUserById(userId);
                 return Ok(_mapper.Map<UserDto>(user));

@@ -11,7 +11,7 @@ namespace PropertyManagerApi.Models.DTOs.Property
         public DateTime CreatedDateTime { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
         public AddressDetailsDto Address { get; set; }
-        public DateTime PurchaseDate { get; set; }        
+        public DateTime PurchaseDate { get; set; }
         public double PurchasePrice { get; set; }
         public double PropertyValue { get; set; }
         public string Description { get; set; }

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using PropertyManager.Api.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Tenant;
+using System;
 
 namespace PropertyManagerApi.Profiles
 {
@@ -33,14 +32,15 @@ namespace PropertyManagerApi.Profiles
         }
     }
 
-
     public class FileResolver : IMappingAction<Tenant, Tenant_DetailDto>
     {
         private readonly IFileService _fileService;
+
         public FileResolver(IFileService fileService)
         {
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
+
         public void Process(Tenant source, Tenant_DetailDto destination, ResolutionContext context)
         {
             if (string.IsNullOrEmpty(source.Profile_Url))
@@ -51,5 +51,3 @@ namespace PropertyManagerApi.Profiles
         }
     }
 }
-
-

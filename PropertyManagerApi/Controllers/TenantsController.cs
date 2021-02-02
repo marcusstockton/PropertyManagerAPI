@@ -1,12 +1,12 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertyManager.Api.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Tenant;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace PropertyManagerApi.Controllers
 {
@@ -63,7 +63,7 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Tenant_DetailDto>> CreateTenant([FromForm]Tenant_CreateDto value)
+        public async Task<ActionResult<Tenant_DetailDto>> CreateTenant([FromForm] Tenant_CreateDto value)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace PropertyManagerApi.Controllers
             var url = $"http://api.dataatwork.org/v1/jobs/autocomplete?begins_with={jobTitle}";
             HttpClient req = new HttpClient();
             var content = await req.GetAsync(url);
-            if (content.IsSuccessStatusCode) 
+            if (content.IsSuccessStatusCode)
             {
                 return Ok(content.Content.ReadAsStringAsync());
             }

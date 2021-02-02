@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Property;
-using PropertyManagerApi.Models.DTOs.Tenant;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace PropertyManagerApi.Profiles
 {
@@ -19,7 +16,7 @@ namespace PropertyManagerApi.Profiles
                 .ForMember(dest => dest.PurchaseDate, opt => opt.MapFrom(src => src.PurchaseDate))
                 .ForMember(dest => dest.PurchasePrice, opt => opt.MapFrom(src => src.PurchasePrice))
                 .ForMember(dest => dest.RentalPrice, opt => opt.MapFrom(src => src.RentalPrice))
-                .ForMember(dest => dest.Tenants, opt => opt.MapFrom(src=>src.Tenants))
+                .ForMember(dest => dest.Tenants, opt => opt.MapFrom(src => src.Tenants))
                 .ReverseMap();
 
             CreateMap<Property, PropertyCreateDto>()
@@ -30,9 +27,6 @@ namespace PropertyManagerApi.Profiles
                 .ForMember(dest => dest.Town, opt => opt.MapFrom(src => src.Address.Town))
                 .ForMember(dest => dest.Postcode, opt => opt.MapFrom(src => src.Address.PostCode))
                 .ReverseMap();
-
         }
-       
-
     }
 }

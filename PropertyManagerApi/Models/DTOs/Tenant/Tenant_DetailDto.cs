@@ -19,6 +19,5 @@ namespace PropertyManagerApi.Models.DTOs.Tenant
         public string Profession { get; set; }
         public List<Note> Notes { get; set; }
         public string Image { get; set; }
-
     }
 }

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using PropertyManager.Api.Interfaces;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Models;
-using PropertyManagerApi.Models.DTOs.Tenant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +14,16 @@ namespace PropertyManager.Api.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IFileService _fileService;
+
         public TenantService(ApplicationDbContext context, IFileService fileService)
         {
             _context = context;
             _fileService = fileService;
         }
+
         public async Task<List<Tenant>> GetTenantsByPropertyId(Guid propertyId)
         {
-            return  await _context.Tenants.Where(x => x.Property.Id == propertyId).ToListAsync();
+            return await _context.Tenants.Where(x => x.Property.Id == propertyId).ToListAsync();
         }
 
         public async Task<Tenant> GetTenantById(Guid tenantId)
@@ -46,7 +47,7 @@ namespace PropertyManager.Api.Services
         {
             await _context.Tenants.AddAsync(tenantModel);
 
-            if (profile  != null)
+            if (profile != null)
             {
                 // Save the file, return the file location
                 tenantModel.Profile_Url = await _fileService.SaveFile(profile, tenantModel.Id);
@@ -58,7 +59,7 @@ namespace PropertyManager.Api.Services
         public async Task<bool> DeleteTenant(Guid tenantId)
         {
             var tenant = await _context.Tenants.FindAsync(tenantId);
-            if(tenant != null)
+            if (tenant != null)
             {
                 _context.Tenants.Remove(tenant);
                 return (await _context.SaveChangesAsync() > 0);

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PropertyManagerApi.Controllers
 {
@@ -18,6 +18,7 @@ namespace PropertyManagerApi.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+
         public NotesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;

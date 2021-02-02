@@ -1,12 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using AutoMapper;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PropertyManagerApi.Interfaces;
-using AutoMapper;
-using System.Security.Claims;
-using System.Security.Principal;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Property;
+using System;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace PropertyManagerApi.Controllers.Tests
 {
@@ -39,7 +39,6 @@ namespace PropertyManagerApi.Controllers.Tests
             _mapperMock.Setup(m => m.Map<Property, PropertyDetailDto>(It.IsAny<Property>())).Returns(new PropertyDetailDto());
             _mapperMock.Setup(m => m.Map<Property, PropertyCreateDto>(It.IsAny<Property>())).Returns(new PropertyCreateDto());
         }
-
 
         [TestMethod()]
         public void GetPropertiesByPortfolioIdTest()

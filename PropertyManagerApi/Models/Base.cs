@@ -7,8 +7,13 @@ namespace PropertyManagerApi.Models
     {
         [Key]
         public Guid Id { get; set; }
+
+        [DataType(DataType.DateTime)]
         public DateTime CreatedDateTime { get; set; }
+
+        [DataType(DataType.DateTime)]
         public DateTime? UpdatedDateTime { get; set; }
+
         public bool IsActive { get; set; }
     }
 }
