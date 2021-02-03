@@ -47,7 +47,7 @@ namespace PropertyManagerApi.Controllers
 
         // GET: api/Properties/5
         [HttpGet("{portfolioId}/{id}")]
-        public async Task<ActionResult<Property>> GetPropertyById(Guid portfolioId, Guid id)
+        public async Task<ActionResult<PropertyDetailDto>> GetPropertyById(Guid portfolioId, Guid id)
         {
             var @property = await _propertyService.GetPropertyById(portfolioId, id);
 
@@ -56,20 +56,7 @@ namespace PropertyManagerApi.Controllers
                 return NotFound();
             }
 
-            return @property;
-        }
-
-        [HttpGet("GetPropertyDetails/{propertyId}")]
-        public async Task<ActionResult<PropertyDetailDto>> GetPropertyDetails(Guid propertyId)
-        {
-            var @property = await _propertyService.GetPropertyTenantAndAddressDetails(propertyId);
-            if (@property == null)
-            {
-                return NotFound();
-            }
-            var result = _mapper.Map<PropertyDetailDto>(@property);
-
-            return result;
+            return Ok(_mapper.Map<PropertyDetailDto>(@property));
         }
 
         // PUT: api/Properties/5
@@ -96,14 +83,14 @@ namespace PropertyManagerApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("{portfolioId}")]
-        public async Task<ActionResult<Property>> CreateProperty(Guid portfolioId, PropertyCreateDto @property)
+        public async Task<ActionResult<PropertyDetailDto>> CreateProperty(Guid portfolioId, PropertyCreateDto @property)
         {
             if (ModelState.IsValid)
             {
                 var newProperty = _mapper.Map<Property>(@property);
                 await _propertyService.CreateProperty(newProperty, portfolioId);
 
-                return Ok(newProperty);
+                return CreatedAtAction("GetPropertyById", new { portfolioId, newProperty.Id });
             }
             return BadRequest(ModelState);
         }

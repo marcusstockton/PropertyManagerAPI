@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PropertyManager.Api.Models.DTOs.Portfolio;
+using PropertyManager.Api.Profiles;
 using PropertyManagerApi.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Portfolio;
@@ -33,7 +34,10 @@ namespace PropertyManagerApi.Controllers.Tests
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new PortfolioProfile());
+                mc.AddProfile(new PropertyProfile());
                 mc.AddProfile(new UserProfile());
+                mc.AddProfile(new TenantProfile());
+                mc.AddProfile(new AddressProfile());
             });
 
             _mapperMock = new Mapper(mappingConfig);
@@ -108,9 +112,62 @@ namespace PropertyManagerApi.Controllers.Tests
         }
 
         [TestMethod()]
-        public void GetPortfolioAndProperties_Returns_The_Correct_Portfolio_And_Related_Properties()
+        public async Task GetPortfolioAndProperties_Returns_The_Correct_Portfolio_And_Related_PropertiesAsync()
         {
-            Assert.Fail();
+            var portfolio = new Portfolio {
+                Id = Guid.NewGuid(),
+                CreatedDateTime = DateTime.Now,
+                Name = "Test",
+                Owner = _user,
+                IsActive = true,
+                Properties = new List<Property>
+                {
+                    new Property {
+                        Address = new Address
+                        {
+                            City = "Exeter",
+                            CreatedDateTime = DateTime.Now,
+                            IsActive = true,
+                            Line1 = "Line 1",
+                            PostCode = "EX1 1EX"
+                        },
+                        Description = "Some Description",
+                        IsActive = true,
+                        NoOfBeds = 2,
+                        PropertyValue = 12345,
+                        RentalPrice = 432,
+                        Tenants = new List<Tenant>
+                        {
+                            new Tenant
+                            {
+                                FirstName = "Bob",
+                                LastName = "Builder",
+                                ContactNumber = "019238475203",
+                                EmailAddress = "test@test.com",
+                                IsActive = true,
+                                Profession = "Builder",
+                                TenancyStartDate = DateTime.Now.AddDays(-90),
+                                Title = "Mr"
+                            }
+                        },
+                        PurchaseDate = DateTime.Now.AddDays(-96),
+                        PurchasePrice = 908734
+                    }
+                } 
+            };
+            _portfolioServceMock.Setup(x => x.GetPortfolioAndProperties(It.IsAny<Guid>())).ReturnsAsync(portfolio);
+            
+            var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock);
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext() { User = _principle }
+            };
+            var results = await controller.GetPortfolioAndProperties(It.IsAny<Guid>());
+            Assert.IsNotNull(results);
+            var okResult = results.Result as OkObjectResult;
+            Assert.AreEqual((int)HttpStatusCode.OK, okResult.StatusCode);
+
+            var okVal = okResult.Value as PortfolioDetailDto;
         }
 
         [TestMethod()]

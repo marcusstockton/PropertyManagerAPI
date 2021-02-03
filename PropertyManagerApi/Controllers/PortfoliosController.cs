@@ -61,7 +61,7 @@ namespace PropertyManagerApi.Controllers
                 return NotFound();
             }
             var portfolioDetail = _mapper.Map<PortfolioDetailDto>(portfolio);
-            return portfolioDetail;
+            return Ok(portfolioDetail);
         }
 
         // PUT: api/Portfolios/5
