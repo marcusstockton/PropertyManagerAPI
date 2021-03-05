@@ -114,7 +114,8 @@ namespace PropertyManagerApi.Controllers.Tests
         [TestMethod()]
         public async Task GetPortfolioAndProperties_Returns_The_Correct_Portfolio_And_Related_PropertiesAsync()
         {
-            var portfolio = new Portfolio {
+            var portfolio = new Portfolio
+            {
                 Id = Guid.NewGuid(),
                 CreatedDateTime = DateTime.Now,
                 Name = "Test",
@@ -153,10 +154,10 @@ namespace PropertyManagerApi.Controllers.Tests
                         PurchaseDate = DateTime.Now.AddDays(-96),
                         PurchasePrice = 908734
                     }
-                } 
+                }
             };
             _portfolioServceMock.Setup(x => x.GetPortfolioAndProperties(It.IsAny<Guid>())).ReturnsAsync(portfolio);
-            
+
             var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock);
             controller.ControllerContext = new ControllerContext()
             {
@@ -183,7 +184,7 @@ namespace PropertyManagerApi.Controllers.Tests
         {
             var portfolio = new Portfolio { Name = "New Portfolio", Owner = _user };
 
-            _portfolioServceMock.Setup(x => x.CreatePortfolio(portfolio, _user.Id)).ReturnsAsync(portfolio);
+            _portfolioServceMock.Setup(x => x.CreatePortfolio(It.IsAny<Portfolio>(), It.IsAny<Guid>())).ReturnsAsync(portfolio);
 
             var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock);
             controller.ControllerContext = new ControllerContext()
@@ -199,9 +200,21 @@ namespace PropertyManagerApi.Controllers.Tests
         }
 
         [TestMethod()]
-        public void DeletePortfolio_Correctly_Deletes_The_Portfolio()
+        public async Task DeletePortfolio_Correctly_Deletes_The_PortfolioAsync()
         {
-            Assert.Fail();
+            var portfolioId = Guid.NewGuid();
+            _portfolioServceMock.Setup(x => x.DeletePortfolio(portfolioId)).ReturnsAsync(true);
+
+            var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock);
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext() { User = _principle }
+            };
+
+            var results = await controller.DeletePortfolio(portfolioId);
+
+            var okResult = results as NoContentResult;
+            Assert.AreEqual((int)HttpStatusCode.NoContent, okResult.StatusCode);
         }
     }
 }

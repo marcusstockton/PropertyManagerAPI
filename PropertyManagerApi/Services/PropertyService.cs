@@ -52,10 +52,10 @@ namespace PropertyManagerApi.Services
         public async Task<Property> CreateProperty(Property property, Guid portfolioId)
         {
             var portfolio = await _context.Portfolios
-                .Include(x=>x.Properties)
-                .SingleOrDefaultAsync(x=>x.Id == portfolioId);
+                .Include(x => x.Properties)
+                .SingleOrDefaultAsync(x => x.Id == portfolioId);
 
-            if(portfolio == null)
+            if (portfolio == null)
             {
                 throw new Exception("No Portfolio Found");
             }

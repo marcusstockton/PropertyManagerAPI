@@ -203,11 +203,9 @@ namespace PropertyManagerApi.Controllers.Tests
             Assert.AreEqual("Exeter", okVal.Address.City);
         }
 
-
         [TestMethod()]
         public void PutPropertyTest()
         {
-
             Assert.Fail();
         }
 

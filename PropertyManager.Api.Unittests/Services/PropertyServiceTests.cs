@@ -54,7 +54,6 @@ namespace PropertyManager.Api.Unittests.Services
                 Assert.AreEqual(2, result.Count);
                 Assert.AreEqual(0, result2.Count);
             }
-            
         }
 
         [TestMethod()]
@@ -134,7 +133,6 @@ namespace PropertyManager.Api.Unittests.Services
             Assert.AreEqual("Description for new property", result.Description);
             Assert.AreEqual(1, result.Tenants.Count);
         }
-
 
         private void SetupData(ApplicationDbContext dbContext)
         {
