@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using PropertyManager.Api.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Tenant;
-using System;
 
 namespace PropertyManagerApi.Profiles
 {

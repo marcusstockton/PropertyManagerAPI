@@ -1,5 +1,5 @@
-﻿using PropertyManagerApi.Models.DTOs.Auth;
-using System;
+﻿using System;
+using PropertyManagerApi.Models.DTOs.Auth;
 
 namespace PropertyManager.Api.Models.DTOs.Portfolio
 {

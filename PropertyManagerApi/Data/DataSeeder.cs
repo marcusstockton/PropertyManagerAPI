@@ -1,11 +1,11 @@
-﻿using AutoBogus;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoBogus;
 using Bogus.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using PropertyManagerApi.Models;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PropertyManagerApi.Data
 {

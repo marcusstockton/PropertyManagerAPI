@@ -1,7 +1,7 @@
-﻿using PropertyManager.Api.Models.DTOs.Address;
-using PropertyManagerApi.Models.DTOs.Tenant;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using PropertyManager.Api.Models.DTOs.Address;
+using PropertyManagerApi.Models.DTOs.Tenant;
 
 namespace PropertyManagerApi.Models.DTOs.Property
 {

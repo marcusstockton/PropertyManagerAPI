@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using PropertyManagerApi.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using PropertyManagerApi.Models;
 
 namespace PropertyManager.Api.Interfaces
 {

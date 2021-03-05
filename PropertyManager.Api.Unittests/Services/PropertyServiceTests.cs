@@ -1,13 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PropertyManagerApi.Data;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace PropertyManager.Api.Unittests.Services
 {

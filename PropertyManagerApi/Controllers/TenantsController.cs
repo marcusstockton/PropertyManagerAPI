@@ -1,12 +1,12 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PropertyManager.Api.Interfaces;
 using PropertyManagerApi.Models;
 using PropertyManagerApi.Models.DTOs.Tenant;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace PropertyManagerApi.Controllers
 {

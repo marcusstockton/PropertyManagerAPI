@@ -1,12 +1,12 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PropertyManagerApi.Models.DTOs.Auth;
 using PropertyManagerApi.Services;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace PropertyManagerApi.Controllers
 {

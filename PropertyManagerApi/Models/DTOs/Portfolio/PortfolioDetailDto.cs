@@ -1,8 +1,8 @@
-﻿using PropertyManagerApi.Models.DTOs.Auth;
-using PropertyManagerApi.Models.DTOs.Property;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using PropertyManagerApi.Models.DTOs.Auth;
+using PropertyManagerApi.Models.DTOs.Property;
 
 namespace PropertyManagerApi.Models.DTOs.Portfolio
 {
