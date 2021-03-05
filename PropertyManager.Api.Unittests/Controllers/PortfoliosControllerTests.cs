@@ -168,6 +168,8 @@ namespace PropertyManagerApi.Controllers.Tests
             Assert.AreEqual((int)HttpStatusCode.OK, okResult.StatusCode);
 
             var okVal = okResult.Value as PortfolioDetailDto;
+            Assert.AreEqual(1, okVal.Properties.Count);
+            Assert.AreEqual(1, okVal.Properties.First().Tenants.Count);
         }
 
         [TestMethod()]
@@ -177,9 +179,23 @@ namespace PropertyManagerApi.Controllers.Tests
         }
 
         [TestMethod()]
-        public void Create_Portfolio_With_Valid_Data_Works()
+        public async Task Create_Portfolio_With_Valid_Data_WorksAsync()
         {
-            Assert.Fail();
+            var portfolio = new Portfolio { Name = "New Portfolio", Owner = _user };
+
+            _portfolioServceMock.Setup(x => x.CreatePortfolio(portfolio, _user.Id)).ReturnsAsync(portfolio);
+
+            var controller = new PortfoliosController(_portfolioServceMock.Object, _mapperMock);
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext() { User = _principle }
+            };
+
+            var createPortfolio = _mapperMock.Map<PortfolioCreateDto>(portfolio);
+            var results = await controller.CreatePortfolio(createPortfolio);
+
+            var okResult = results.Result as CreatedAtActionResult;
+            Assert.AreEqual((int)HttpStatusCode.Created, okResult.StatusCode);
         }
 
         [TestMethod()]
